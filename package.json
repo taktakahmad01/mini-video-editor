@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "build": "mkdir -p dist && cp index.html dist/index.html && cp style.css dist/style.css"
+    "build": "mkdir -p dist && cp index.html dist/index.html && cp editor.html dist/editor.html && cp style.css dist/style.css"
+
   },
   "dependencies": {
     "express": "^5.1.0",
