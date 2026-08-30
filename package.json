@@ -1,16 +1,13 @@
 {
-  "name": "mini-video-editor",
+  "name": "video-export-test",
   "version": "1.0.0",
-  "type": "module",
+  "type": "commonjs",
+  "main": "server.js",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build"
+    "start": "node server.js"
   },
   "dependencies": {
-    "@ffmpeg/ffmpeg": "^0.12.15",
-    "@ffmpeg/util": "^0.12.2"
-  },
-  "devDependencies": {
-    "vite": "^7.1.0"
+    "express": "^5.1.0",
+    "multer": "^2.0.2"
   }
 }
