@@ -3,6 +3,7 @@ const multer = require("multer");
 const { execFile } = require("child_process");
 const fs = require("fs");
 const path = require("path");
+const ffmpegPath = require("ffmpeg-static");
 
 const app = express();
 
@@ -20,7 +21,9 @@ app.post(
   (req, res) => {
 
     if (!req.file) {
-      return res.status(400).send("No video uploaded");
+      return res
+        .status(400)
+        .send("No video uploaded");
     }
 
     const input = req.file.path;
@@ -32,49 +35,85 @@ app.post(
 
     const args = [
       "-y",
-      "-i", input,
 
-      "-c:v", "libx264",
-      "-preset", "veryfast",
-      "-crf", "23",
+      "-i",
+      input,
 
-      "-c:a", "aac",
-      "-b:a", "128k",
+      "-c:v",
+      "libx264",
 
-      "-movflags", "+faststart",
+      "-preset",
+      "veryfast",
+
+      "-crf",
+      "23",
+
+      "-c:a",
+      "aac",
+
+      "-b:a",
+      "128k",
+
+      "-movflags",
+      "+faststart",
 
       output
     ];
 
-    execFile("ffmpeg", args, (error) => {
+    execFile(
+      ffmpegPath,
+      args,
+      (error) => {
 
-      if (error) {
-        console.error(error);
+        if (error) {
 
-        fs.rm(input, { force: true }, () => {});
+          console.error(error);
 
-        return res
-          .status(500)
-          .send("Export failed");
-      }
+          fs.rm(
+            input,
+            { force: true },
+            () => {}
+          );
 
-      res.download(
-        output,
-        "export-test.mp4",
-        () => {
-
-          fs.rm(input, { force: true }, () => {});
-          fs.rm(output, { force: true }, () => {});
-
+          return res
+            .status(500)
+            .send("Export failed");
         }
-      );
 
-    });
+        res.download(
+          output,
+          "export-test.mp4",
+          () => {
+
+            fs.rm(
+              input,
+              { force: true },
+              () => {}
+            );
+
+            fs.rm(
+              output,
+              { force: true },
+              () => {}
+            );
+
+          }
+        );
+
+      }
+    );
+
   }
 );
 
-const PORT = process.env.PORT || 3000;
+const PORT =
+  process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+app.listen(
+  PORT,
+  () => {
+    console.log(
+      `Server running on port ${PORT}`
+    );
+  }
+);
