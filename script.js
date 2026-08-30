@@ -1,209 +1,96 @@
-const videoInput =
-  document.getElementById("videoInput");
-
-const editor =
-  document.getElementById("editor");
-
-const video =
-  document.getElementById("video");
-
-const videoBox =
-  document.querySelector(".video-box");
-
-const playBtn =
-  document.getElementById("playBtn");
-
-const timeline =
-  document.getElementById("timeline");
-
-const segmentsContainer =
-  document.getElementById("segments");
-
-const playhead =
-  document.getElementById("playhead");
-
-const splitBtn =
-  document.getElementById("splitBtn");
-
-const deleteBtn =
-  document.getElementById("deleteBtn");
-
-const currentTimeText =
-  document.getElementById("currentTime");
-
-const totalTimeText =
-  document.getElementById("totalTime");
-
+const videoInput = document.getElementById("videoInput");
+const editor = document.getElementById("editor");
+const video = document.getElementById("video");
+const videoBox = document.querySelector(".video-box");
+const playBtn = document.getElementById("playBtn");
+const timeline = document.getElementById("timeline");
+const segmentsContainer = document.getElementById("segments");
+const playhead = document.getElementById("playhead");
+const splitBtn = document.getElementById("splitBtn");
+const deleteBtn = document.getElementById("deleteBtn");
+const currentTimeText = document.getElementById("currentTime");
+const totalTimeText = document.getElementById("totalTime");
 
 let segments = [];
-
 let selectedSegmentId = null;
-
 let thumbnails = [];
-
 let videoDuration = 0;
-
-let currentSegmentIndex = 0;
-
 let objectURL = null;
 
-let generatingThumbnails = false;
-
-
-
 /* =========================
-   VIDEO LOAD
+   LOAD VIDEO
 ========================= */
 
-videoInput.addEventListener(
-  "change",
-  async function () {
+videoInput.addEventListener("change", function () {
+  const file = this.files && this.files[0];
 
-    const file =
-      this.files[0];
+  if (!file) return;
 
-    if (!file) return;
-
-
-    if (objectURL) {
-      URL.revokeObjectURL(objectURL);
-    }
-
-
-    objectURL =
-      URL.createObjectURL(file);
-
-    video.src =
-      objectURL;
-
-
-    editor.classList.remove(
-      "hidden"
-    );
-
-
-    video.addEventListener(
-      "loadedmetadata",
-      handleVideoLoaded,
-      {
-        once: true
-      }
-    );
-
+  if (objectURL) {
+    URL.revokeObjectURL(objectURL);
   }
-);
 
+  objectURL = URL.createObjectURL(file);
 
-async function handleVideoLoaded() {
+  editor.classList.remove("hidden");
 
-  videoDuration =
-    video.duration;
+  video.onloadedmetadata = async function () {
+    videoDuration = video.duration;
 
+    segments = [
+      {
+        id: createId(),
+        start: 0,
+        end: videoDuration
+      }
+    ];
 
-  segments = [
-    {
-      id: createId(),
-      start: 0,
-      end: videoDuration
-    }
-  ];
+    selectedSegmentId = null;
 
+    currentTimeText.textContent = formatTime(0);
+    totalTimeText.textContent = formatTime(videoDuration);
 
-  selectedSegmentId =
-    null;
+    renderSegments();
+    updatePlayhead(0);
 
+    thumbnails = await createThumbnails();
 
-  currentSegmentIndex =
-    0;
+    renderSegments();
 
+    video.currentTime = 0;
+  };
 
-  currentTimeText.textContent =
-    formatTime(0);
+  video.onerror = function () {
+    alert("Had video ma9darch yt7ell. Jarrab MP4.");
+  };
 
-  totalTimeText.textContent =
-    formatTime(videoDuration);
-
-
-  renderSegments();
-
-  updatePlayhead(0);
-
-
-  generatingThumbnails =
-    true;
-
-  thumbnails =
-    await createThumbnails();
-
-  generatingThumbnails =
-    false;
-
-
-  renderSegments();
-
-
-  video.currentTime = 0;
-
-}
-
-
+  video.src = objectURL;
+  video.load();
+});
 
 /* =========================
    THUMBNAILS
 ========================= */
 
 async function createThumbnails() {
-
   const results = [];
 
-  const numberOfFrames =
-    Math.min(
-      30,
-      Math.max(
-        12,
-        Math.ceil(
-          videoDuration / 3
-        )
-      )
-    );
+  const frameCount = Math.min(
+    20,
+    Math.max(8, Math.ceil(videoDuration / 3))
+  );
 
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
 
-  const canvas =
-    document.createElement(
-      "canvas"
-    );
+  canvas.width = 160;
+  canvas.height = 90;
 
-  const ctx =
-    canvas.getContext("2d");
-
-
-  canvas.width = 180;
-
-  canvas.height = 100;
-
-
-  const oldTime =
-    video.currentTime;
-
-
-  for (
-    let i = 0;
-    i < numberOfFrames;
-    i++
-  ) {
-
-    const time =
-      videoDuration *
-      (
-        i /
-        numberOfFrames
-      );
-
+  for (let i = 0; i < frameCount; i++) {
+    const time = (videoDuration * i) / frameCount;
 
     try {
-
       await seekVideo(time);
-
 
       ctx.drawImage(
         video,
@@ -213,909 +100,350 @@ async function createThumbnails() {
         canvas.height
       );
 
-
       results.push({
         time,
-        image:
-          canvas.toDataURL(
-            "image/jpeg",
-            0.65
-          )
+        image: canvas.toDataURL("image/jpeg", 0.6)
       });
-
-    } catch (error) {
-
-      console.log(
-        "Thumbnail error",
-        error
-      );
-
+    } catch (e) {
+      console.log(e);
     }
-
   }
 
-
-  video.currentTime =
-    Math.min(
-      oldTime,
-      videoDuration
-    );
-
-
   return results;
-
 }
-
 
 function seekVideo(time) {
+  return new Promise((resolve) => {
+    const done = () => {
+      video.removeEventListener("seeked", done);
+      resolve();
+    };
 
-  return new Promise(
-    (resolve) => {
+    video.addEventListener("seeked", done);
 
-      const done = () => {
-
-        video.removeEventListener(
-          "seeked",
-          done
-        );
-
-        resolve();
-
-      };
-
-
-      video.addEventListener(
-        "seeked",
-        done
-      );
-
-
-      video.currentTime =
-        Math.min(
-          time,
-          Math.max(
-            0,
-            video.duration - 0.05
-          )
-        );
-
-    }
-  );
-
+    video.currentTime = Math.min(
+      time,
+      Math.max(0, videoDuration - 0.05)
+    );
+  });
 }
-
-
 
 /* =========================
    SEGMENTS
 ========================= */
 
 function renderSegments() {
-
   segmentsContainer.innerHTML = "";
 
+  const total = getEditedDuration();
 
-  const editedDuration =
-    getEditedDuration();
+  segments.forEach((segment) => {
+    const el = document.createElement("div");
 
+    el.className = "segment";
 
-  if (!editedDuration) {
-    return;
-  }
-
-
-  segments.forEach(
-    (segment, index) => {
-
-      const duration =
-        segment.end -
-        segment.start;
-
-
-      const element =
-        document.createElement(
-          "div"
-        );
-
-
-      element.className =
-        "segment";
-
-
-      element.dataset.id =
-        segment.id;
-
-
-      if (
-        segment.id ===
-        selectedSegmentId
-      ) {
-
-        element.classList.add(
-          "selected"
-        );
-
-      }
-
-
-      element.style.width =
-        (
-          duration /
-          editedDuration *
-          100
-        ) + "%";
-
-
-      const segmentThumbs =
-        thumbnails.filter(
-          frame =>
-            frame.time >=
-              segment.start &&
-            frame.time <=
-              segment.end
-        );
-
-
-      if (
-        segmentThumbs.length
-      ) {
-
-        segmentThumbs.forEach(
-          frame => {
-
-            const img =
-              document.createElement(
-                "img"
-              );
-
-            img.src =
-              frame.image;
-
-            element.appendChild(
-              img
-            );
-
-          }
-        );
-
-      } else {
-
-        const empty =
-          document.createElement(
-            "div"
-          );
-
-        empty.className =
-          "segment-empty";
-
-        element.appendChild(
-          empty
-        );
-
-      }
-
-
-      element.addEventListener(
-        "click",
-        function (event) {
-
-          event.stopPropagation();
-
-          selectSegment(
-            segment.id
-          );
-
-        }
-      );
-
-
-      segmentsContainer.appendChild(
-        element
-      );
-
-    }
-  );
-
-
-  deleteBtn.disabled =
-    selectedSegmentId ===
-    null;
-
-}
-
-
-
-/* =========================
-   TIMELINE TAP / SEEK
-========================= */
-
-timeline.addEventListener(
-  "click",
-  function (event) {
-
-    if (!segments.length) {
-      return;
+    if (segment.id === selectedSegmentId) {
+      el.classList.add("selected");
     }
 
+    const duration = segment.end - segment.start;
 
-    const rect =
-      timeline.getBoundingClientRect();
+    el.style.width = ((duration / total) * 100) + "%";
 
-
-    const x =
-      Math.max(
-        0,
-        Math.min(
-          event.clientX -
-          rect.left,
-          rect.width
-        )
-      );
-
-
-    const ratio =
-      x /
-      rect.width;
-
-
-    const editedTime =
-      ratio *
-      getEditedDuration();
-
-
-    seekEditedTime(
-      editedTime
+    const frames = thumbnails.filter(
+      frame =>
+        frame.time >= segment.start &&
+        frame.time <= segment.end
     );
 
-  }
-);
-
-
-
-function seekEditedTime(
-  editedTime
-) {
-
-  let cursor = 0;
-
-
-  for (
-    let i = 0;
-    i < segments.length;
-    i++
-  ) {
-
-    const segment =
-      segments[i];
-
-    const duration =
-      segment.end -
-      segment.start;
-
-
-    if (
-      editedTime <=
-      cursor + duration
-    ) {
-
-      const localTime =
-        editedTime -
-        cursor;
-
-
-      currentSegmentIndex =
-        i;
-
-
-      video.currentTime =
-        Math.min(
-          segment.start +
-          localTime,
-          segment.end -
-          0.01
-        );
-
-
-      updatePlayhead(
-        editedTime
-      );
-
-
-      currentTimeText.textContent =
-        formatTime(
-          editedTime
-        );
-
-
-      return;
-
+    if (frames.length) {
+      frames.forEach((frame) => {
+        const img = document.createElement("img");
+        img.src = frame.image;
+        el.appendChild(img);
+      });
+    } else {
+      const empty = document.createElement("div");
+      empty.className = "segment-empty";
+      el.appendChild(empty);
     }
 
+    el.addEventListener("click", function (e) {
+      e.stopPropagation();
 
-    cursor += duration;
+      selectedSegmentId = segment.id;
+      renderSegments();
 
-  }
+      deleteBtn.disabled = false;
+    });
 
+    segmentsContainer.appendChild(el);
+  });
+
+  deleteBtn.disabled = !selectedSegmentId;
 }
-
-
 
 /* =========================
-   SELECT
+   TIMELINE SEEK
 ========================= */
 
-function selectSegment(id) {
+timeline.addEventListener("click", function (event) {
+  if (!segments.length) return;
 
-  selectedSegmentId = id;
+  const rect = timeline.getBoundingClientRect();
 
-  renderSegments();
+  const x = Math.max(
+    0,
+    Math.min(event.clientX - rect.left, rect.width)
+  );
 
+  const editedTime =
+    (x / rect.width) * getEditedDuration();
+
+  seekEditedTime(editedTime);
+});
+
+function seekEditedTime(editedTime) {
+  let cursor = 0;
+
+  for (let i = 0; i < segments.length; i++) {
+    const segment = segments[i];
+
+    const duration =
+      segment.end - segment.start;
+
+    if (editedTime <= cursor + duration) {
+      const local = editedTime - cursor;
+
+      video.currentTime = Math.min(
+        segment.start + local,
+        segment.end - 0.01
+      );
+
+      updatePlayhead(editedTime);
+
+      currentTimeText.textContent =
+        formatTime(editedTime);
+
+      return;
+    }
+
+    cursor += duration;
+  }
 }
-
-
 
 /* =========================
    SPLIT
 ========================= */
 
-splitBtn.addEventListener(
-  "click",
-  function () {
+splitBtn.addEventListener("click", function () {
+  if (!segments.length) return;
 
-    if (!segments.length) {
-      return;
-    }
+  const t = video.currentTime;
 
+  const index = segments.findIndex(
+    segment =>
+      t > segment.start + 0.05 &&
+      t < segment.end - 0.05
+  );
 
-    const sourceTime =
-      video.currentTime;
+  if (index === -1) return;
 
+  const segment = segments[index];
 
-    const index =
-      segments.findIndex(
-        segment =>
-          sourceTime >
-            segment.start &&
-          sourceTime <
-            segment.end
-      );
+  const first = {
+    id: createId(),
+    start: segment.start,
+    end: t
+  };
 
+  const second = {
+    id: createId(),
+    start: t,
+    end: segment.end
+  };
 
-    if (index === -1) {
-      return;
-    }
+  segments.splice(
+    index,
+    1,
+    first,
+    second
+  );
 
+  selectedSegmentId = second.id;
 
-    const segment =
-      segments[index];
-
-
-    const minLength =
-      0.08;
-
-
-    if (
-      sourceTime -
-      segment.start <
-      minLength
-    ) {
-
-      return;
-    }
-
-
-    if (
-      segment.end -
-      sourceTime <
-      minLength
-    ) {
-
-      return;
-    }
-
-
-    const first =
-      {
-        id: createId(),
-        start: segment.start,
-        end: sourceTime
-      };
-
-
-    const second =
-      {
-        id: createId(),
-        start: sourceTime,
-        end: segment.end
-      };
-
-
-    segments.splice(
-      index,
-      1,
-      first,
-      second
-    );
-
-
-    selectedSegmentId =
-      second.id;
-
-
-    currentSegmentIndex =
-      index + 1;
-
-
-    renderSegments();
-
-    updatePlayheadFromSourceTime();
-
-  }
-);
-
-
+  renderSegments();
+  updatePlayheadFromSourceTime();
+});
 
 /* =========================
    DELETE
 ========================= */
 
-deleteBtn.addEventListener(
-  "click",
-  function () {
+deleteBtn.addEventListener("click", function () {
+  if (!selectedSegmentId) return;
 
-    if (
-      selectedSegmentId ===
-      null
-    ) {
-
-      return;
-
-    }
-
-
-    if (
-      segments.length === 1
-    ) {
-
-      alert(
-        "You can't delete the whole video."
-      );
-
-      return;
-
-    }
-
-
-    const index =
-      segments.findIndex(
-        segment =>
-          segment.id ===
-          selectedSegmentId
-      );
-
-
-    if (index === -1) {
-      return;
-    }
-
-
-    const wasPlaying =
-      !video.paused;
-
-
-    video.pause();
-
-
-    segments.splice(
-      index,
-      1
-    );
-
-
-    selectedSegmentId =
-      null;
-
-
-    currentSegmentIndex =
-      Math.min(
-        index,
-        segments.length - 1
-      );
-
-
-    const next =
-      segments[
-        currentSegmentIndex
-      ];
-
-
-    video.currentTime =
-      next.start;
-
-
-    renderSegments();
-
-    updatePlayheadFromSourceTime();
-
-
-    totalTimeText.textContent =
-      formatTime(
-        getEditedDuration()
-      );
-
-
-    if (wasPlaying) {
-      playEditedVideo();
-    }
-
-  }
-);
-
-
-
-/* =========================
-   PLAY / PAUSE
-========================= */
-
-playBtn.addEventListener(
-  "click",
-  togglePlay
-);
-
-
-video.addEventListener(
-  "click",
-  togglePlay
-);
-
-
-function togglePlay() {
-
-  if (!segments.length) {
+  if (segments.length <= 1) {
+    alert("Ma t9drch tmse7 video kaml.");
     return;
   }
 
+  const index = segments.findIndex(
+    segment =>
+      segment.id === selectedSegmentId
+  );
 
-  if (video.paused) {
+  if (index === -1) return;
 
-    playEditedVideo();
+  video.pause();
 
-  } else {
+  segments.splice(index, 1);
 
-    video.pause();
+  selectedSegmentId = null;
 
-  }
+  const nextIndex = Math.min(
+    index,
+    segments.length - 1
+  );
 
-}
+  video.currentTime =
+    segments[nextIndex].start;
 
+  renderSegments();
 
-function playEditedVideo() {
+  totalTimeText.textContent =
+    formatTime(getEditedDuration());
 
-  let index =
-    getCurrentSegmentIndex();
-
-
-  if (index === -1) {
-
-    index = 0;
-
-    video.currentTime =
-      segments[0].start;
-
-  }
-
-
-  currentSegmentIndex =
-    index;
-
-
-  const segment =
-    segments[
-      currentSegmentIndex
-    ];
-
-
-  if (
-    video.currentTime >=
-      segment.end - 0.02
-  ) {
-
-    video.currentTime =
-      segment.start;
-
-  }
-
-
-  video.play();
-
-}
-
-
+  updatePlayheadFromSourceTime();
+});
 
 /* =========================
-   PLAYBACK LOGIC
+   PLAY
 ========================= */
 
-video.addEventListener(
-  "play",
-  function () {
+playBtn.addEventListener("click", togglePlay);
+video.addEventListener("click", togglePlay);
 
-    videoBox.classList.add(
-      "playing"
-    );
-
-    playBtn.textContent =
-      "❚❚";
-
+function togglePlay() {
+  if (video.paused) {
+    video.play();
+  } else {
+    video.pause();
   }
-);
+}
 
+video.addEventListener("play", function () {
+  videoBox.classList.add("playing");
+});
 
-video.addEventListener(
-  "pause",
-  function () {
+video.addEventListener("pause", function () {
+  videoBox.classList.remove("playing");
+});
 
-    videoBox.classList.remove(
-      "playing"
-    );
+video.addEventListener("timeupdate", function () {
+  if (!segments.length) return;
 
-    playBtn.textContent =
-      "▶";
+  const index = segments.findIndex(
+    segment =>
+      video.currentTime >= segment.start &&
+      video.currentTime <= segment.end
+  );
 
+  if (index === -1) return;
+
+  const segment = segments[index];
+
+  if (
+    !video.paused &&
+    video.currentTime >= segment.end - 0.04
+  ) {
+    if (index < segments.length - 1) {
+      video.currentTime =
+        segments[index + 1].start;
+    } else {
+      video.pause();
+    }
   }
-);
 
-
-video.addEventListener(
-  "timeupdate",
-  function () {
-
-    if (
-      !segments.length ||
-      generatingThumbnails
-    ) {
-
-      return;
-
-    }
-
-
-    const index =
-      getCurrentSegmentIndex();
-
-
-    if (index === -1) {
-
-      return;
-
-    }
-
-
-    currentSegmentIndex =
-      index;
-
-
-    const segment =
-      segments[index];
-
-
-    if (
-      !video.paused &&
-      video.currentTime >=
-        segment.end - 0.035
-    ) {
-
-      if (
-        index <
-        segments.length - 1
-      ) {
-
-        currentSegmentIndex =
-          index + 1;
-
-
-        video.currentTime =
-          segments[
-            currentSegmentIndex
-          ].start;
-
-
-        video.play();
-
-      } else {
-
-        video.pause();
-
-        currentSegmentIndex =
-          0;
-
-        video.currentTime =
-          segments[0].start;
-
-      }
-
-    }
-
-
-    updatePlayheadFromSourceTime();
-
-  }
-);
-
-
+  updatePlayheadFromSourceTime();
+});
 
 /* =========================
    PLAYHEAD
 ========================= */
 
 function updatePlayheadFromSourceTime() {
+  let edited = 0;
 
-  const index =
-    getCurrentSegmentIndex();
+  for (const segment of segments) {
+    if (
+      video.currentTime >= segment.start &&
+      video.currentTime <= segment.end
+    ) {
+      edited +=
+        video.currentTime -
+        segment.start;
 
+      break;
+    }
 
-  if (index === -1) {
-    return;
+    edited +=
+      segment.end -
+      segment.start;
   }
 
-
-  let editedTime = 0;
-
-
-  for (
-    let i = 0;
-    i < index;
-    i++
-  ) {
-
-    editedTime +=
-      segments[i].end -
-      segments[i].start;
-
-  }
-
-
-  editedTime +=
-    Math.max(
-      0,
-      video.currentTime -
-      segments[index].start
-    );
-
-
-  updatePlayhead(
-    editedTime
-  );
-
+  updatePlayhead(edited);
 
   currentTimeText.textContent =
-    formatTime(
-      editedTime
-    );
-
+    formatTime(edited);
 }
 
+function updatePlayhead(time) {
+  const total = getEditedDuration();
 
-function updatePlayhead(
-  editedTime
-) {
-
-  const duration =
-    getEditedDuration();
-
-
-  if (!duration) {
-    return;
-  }
-
+  if (!total) return;
 
   const percent =
     Math.max(
       0,
-      Math.min(
-        100,
-        editedTime /
-        duration *
-        100
-      )
+      Math.min(100, (time / total) * 100)
     );
-
 
   playhead.style.left =
     percent + "%";
-
 }
-
-
 
 /* =========================
    HELPERS
 ========================= */
 
-function getCurrentSegmentIndex() {
-
-  const time =
-    video.currentTime;
-
-
-  return segments.findIndex(
-    segment =>
-      time >=
-        segment.start - 0.03 &&
-      time <=
-        segment.end + 0.03
-  );
-
-}
-
-
 function getEditedDuration() {
-
   return segments.reduce(
-    (total, segment) => {
-
-      return total +
-        (
-          segment.end -
-          segment.start
-        );
-
-    },
+    (sum, segment) =>
+      sum +
+      (segment.end - segment.start),
     0
   );
-
 }
-
 
 function formatTime(seconds) {
-
-  if (
-    !Number.isFinite(seconds)
-  ) {
-
+  if (!Number.isFinite(seconds)) {
     return "00:00";
-
   }
 
-
-  seconds =
-    Math.max(
-      0,
-      seconds
-    );
-
-
-  const minutes =
-    Math.floor(
-      seconds / 60
-    );
-
-
-  const secs =
-    Math.floor(
-      seconds % 60
-    );
-
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
 
   return (
-    String(minutes)
-      .padStart(2, "0") +
+    String(m).padStart(2, "0") +
     ":" +
-    String(secs)
-      .padStart(2, "0")
+    String(s).padStart(2, "0")
   );
-
 }
 
-
 function createId() {
-
   return (
-    Date.now()
-      .toString(36) +
-    Math.random()
-      .toString(36)
-      .slice(2)
+    Date.now().toString(36) +
+    Math.random().toString(36).slice(2)
   );
-
 }
