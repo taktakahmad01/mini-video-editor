@@ -3,9 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Template 1</title>
-
   <link rel="stylesheet" href="./style.css">
 </head>
 
@@ -41,19 +39,12 @@
 
       <div class="video-shell">
 
-        <div
-          id="reelPreview"
-          class="compact-reel"
-        >
+        <div id="reelPreview" class="compact-reel">
 
-          <div
-            id="hookOutput"
-            class="compact-hook"
-          >
+          <div id="hookOutput" class="compact-hook">
             POV:<br>
             Your hook goes here
           </div>
-
 
           <div class="compact-image-box">
 
@@ -73,26 +64,21 @@
 
         <div class="video-player-controls">
 
-          <button
-            id="videoPlayBtn"
-            class="video-play-btn"
-          >
+          <button id="videoPlayBtn" class="video-play-btn">
             ▶
           </button>
 
           <div class="video-time">
             <span id="currentTime">0:00</span>
             <span>/</span>
-            <span id="totalTime">0:03</span>
+            <span id="totalTime">0:05</span>
           </div>
 
           <div class="mini-progress">
-
             <div
               id="progressFill"
               class="mini-progress-fill"
             ></div>
-
           </div>
 
         </div>
@@ -141,7 +127,6 @@
         ▶ Preview
       </button>
 
-
       <p id="editorStatus"></p>
 
     </section>
@@ -158,129 +143,81 @@
 
   <script>
 
-    const hookInput =
-      document.getElementById("hookInput");
+    const hookInput = document.getElementById("hookInput");
+    const hookOutput = document.getElementById("hookOutput");
 
-    const hookOutput =
-      document.getElementById("hookOutput");
+    const imageInput = document.getElementById("imageInput");
+    const previewImage = document.getElementById("previewImage");
+    const imagePlaceholder = document.getElementById("imagePlaceholder");
 
-    const imageInput =
-      document.getElementById("imageInput");
+    const previewBtn = document.getElementById("previewBtn");
+    const videoPlayBtn = document.getElementById("videoPlayBtn");
 
-    const previewImage =
-      document.getElementById("previewImage");
+    const exportBtn = document.getElementById("exportBtn");
 
-    const imagePlaceholder =
-      document.getElementById("imagePlaceholder");
+    const templateAudio = document.getElementById("templateAudio");
 
-    const previewBtn =
-      document.getElementById("previewBtn");
+    const currentTime = document.getElementById("currentTime");
+    const totalTime = document.getElementById("totalTime");
+    const progressFill = document.getElementById("progressFill");
 
-    const videoPlayBtn =
-      document.getElementById("videoPlayBtn");
-
-    const exportBtn =
-      document.getElementById("exportBtn");
-
-    const templateAudio =
-      document.getElementById("templateAudio");
-
-    const currentTime =
-      document.getElementById("currentTime");
-
-    const totalTime =
-      document.getElementById("totalTime");
-
-    const progressFill =
-      document.getElementById("progressFill");
-
-    const editorStatus =
-      document.getElementById("editorStatus");
+    const editorStatus = document.getElementById("editorStatus");
 
 
     let selectedImage = null;
-
     let playing = false;
-
     let animationFrame = null;
 
 
     /*
-      TEMP SETTINGS
-
-      ملي ندخلو الموسيقى الحقيقية
-      غادي نضبطو هاد الأرقام
-      على حسب الـbeat بالضبط.
+      TEMPLATE 1 TIMING
     */
 
-    const REVEAL_START = 1.20;
+    const REVEAL_START = 1.25;
 
-    const REVEAL_DURATION = 1.60;
+    const REEL_END = 5.04;
 
-    const REEL_END =
-      REVEAL_START + REVEAL_DURATION;
+    const REVEAL_DURATION =
+      REEL_END - REVEAL_START;
 
 
     totalTime.textContent =
       formatTime(REEL_END);
 
 
-    hookInput.addEventListener(
-      "input",
-      () => {
+    hookInput.addEventListener("input", () => {
 
-        const value =
-          hookInput.value.trim();
+      const value = hookInput.value.trim();
 
-        if (!value) {
-
-          hookOutput.innerHTML =
-            "POV:<br>Your hook goes here";
-
-          return;
-
-        }
-
-        hookOutput.textContent =
-          value;
-
+      if (!value) {
+        hookOutput.innerHTML =
+          "POV:<br>Your hook goes here";
+        return;
       }
-    );
+
+      hookOutput.textContent = value;
+
+    });
 
 
-    imageInput.addEventListener(
-      "change",
-      () => {
+    imageInput.addEventListener("change", () => {
 
-        selectedImage =
-          imageInput.files[0];
+      selectedImage = imageInput.files[0];
 
-        if (!selectedImage) return;
+      if (!selectedImage) return;
 
+      const imageUrl =
+        URL.createObjectURL(selectedImage);
 
-        previewImage.src =
-          URL.createObjectURL(
-            selectedImage
-          );
+      previewImage.src = imageUrl;
 
+      previewImage.style.display = "block";
+      previewImage.style.opacity = "0";
+      previewImage.style.filter = "brightness(0)";
 
-        previewImage.style.display =
-          "block";
+      imagePlaceholder.style.display = "none";
 
-
-        previewImage.style.opacity =
-          "0";
-
-
-        previewImage.style.filter =
-          "brightness(0)";
-
-
-        imagePlaceholder.style.display =
-          "none";
-
-      }
-    );
+    });
 
 
     previewBtn.addEventListener(
@@ -288,57 +225,46 @@
       togglePreview
     );
 
-
     videoPlayBtn.addEventListener(
       "click",
       togglePreview
     );
 
 
-    function togglePreview() {
+    async function togglePreview() {
 
       if (!selectedImage) {
-
-        alert(
-          "Choose an image first"
-        );
-
+        alert("Choose an image first");
         return;
-
       }
 
-
       if (playing) {
-
         stopPreview();
-
       } else {
-
-        startPreview();
-
+        await startPreview();
       }
 
     }
 
 
-    function startPreview() {
+    async function startPreview() {
 
       playing = true;
 
-      videoPlayBtn.textContent =
-        "❚❚";
-
-      previewBtn.textContent =
-        "❚❚ Stop";
-
+      videoPlayBtn.textContent = "❚❚";
+      previewBtn.textContent = "❚❚ Stop";
 
       templateAudio.currentTime = 0;
 
+      resetVisuals();
 
-      templateAudio.play().catch(
-        () => {}
-      );
-
+      try {
+        await templateAudio.play();
+      } catch (error) {
+        console.error(error);
+        playing = false;
+        return;
+      }
 
       previewLoop();
 
@@ -351,17 +277,12 @@
 
       templateAudio.pause();
 
+      if (animationFrame) {
+        cancelAnimationFrame(animationFrame);
+      }
 
-      cancelAnimationFrame(
-        animationFrame
-      );
-
-
-      videoPlayBtn.textContent =
-        "▶";
-
-      previewBtn.textContent =
-        "▶ Preview";
+      videoPlayBtn.textContent = "▶";
+      previewBtn.textContent = "▶ Preview";
 
     }
 
@@ -370,63 +291,28 @@
 
       if (!playing) return;
 
+      const time = templateAudio.currentTime;
 
-      let time =
-        templateAudio.currentTime;
-
-
-      /*
-        Ila music mazal ma kaynach
-        nستخدمو clock داخلي.
-      */
-
-      if (
-        !templateAudio.duration ||
-        Number.isNaN(
-          templateAudio.duration
-        )
-      ) {
-
-        time =
-          performance.now() / 1000;
-
-      }
-
-
-      const localTime =
-        time % REEL_END;
-
-
-      updatePreview(
-        localTime
-      );
+      updatePreview(time);
 
 
       /*
-        REEL END
-        = image وصلت 100%
-
-        ومن بعد نعاودوه.
+        END = image 100%
+        then loop automatically
       */
 
-      if (
-        templateAudio.currentTime >=
-        REEL_END
-      ) {
+      if (time >= REEL_END - 0.03) {
 
         templateAudio.currentTime = 0;
 
-        templateAudio.play().catch(
-          () => {}
-        );
+        resetVisuals();
+
+        templateAudio.play().catch(() => {});
 
       }
 
-
       animationFrame =
-        requestAnimationFrame(
-          previewLoop
-        );
+        requestAnimationFrame(previewLoop);
 
     }
 
@@ -436,25 +322,20 @@
       currentTime.textContent =
         formatTime(time);
 
-
-      const progress =
-        Math.min(
-          time / REEL_END,
-          1
-        );
-
+      const videoProgress =
+        Math.min(time / REEL_END, 1);
 
       progressFill.style.width =
-        `${progress * 100}%`;
+        `${videoProgress * 100}%`;
 
 
-      if (
-        time < REVEAL_START
-      ) {
+      /*
+        BEFORE BEAT
+      */
 
-        previewImage.style.opacity =
-          "0";
+      if (time < REVEAL_START) {
 
+        previewImage.style.opacity = "0";
         previewImage.style.filter =
           "brightness(0)";
 
@@ -463,20 +344,21 @@
       }
 
 
+      /*
+        AFTER BEAT:
+        image reveals gradually
+        until 100% at reel end
+      */
+
       const revealProgress =
         Math.min(
-          (
-            time -
-            REVEAL_START
-          ) /
+          (time - REVEAL_START) /
           REVEAL_DURATION,
           1
         );
 
-
       previewImage.style.opacity =
         revealProgress;
-
 
       previewImage.style.filter =
         `brightness(${revealProgress})`;
@@ -484,33 +366,36 @@
     }
 
 
+    function resetVisuals() {
+
+      currentTime.textContent = "0:00";
+
+      progressFill.style.width = "0%";
+
+      if (previewImage.src) {
+        previewImage.style.opacity = "0";
+        previewImage.style.filter =
+          "brightness(0)";
+      }
+
+    }
+
+
     function formatTime(seconds) {
 
       const safeSeconds =
-        Math.max(
-          0,
-          seconds || 0
-        );
-
+        Math.max(0, seconds || 0);
 
       const minutes =
-        Math.floor(
-          safeSeconds / 60
-        );
-
+        Math.floor(safeSeconds / 60);
 
       const secs =
-        Math.floor(
-          safeSeconds % 60
-        );
-
+        Math.floor(safeSeconds % 60);
 
       return (
         minutes +
         ":" +
-        secs
-          .toString()
-          .padStart(2, "0")
+        secs.toString().padStart(2, "0")
       );
 
     }
