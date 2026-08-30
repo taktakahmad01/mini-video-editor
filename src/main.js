@@ -497,8 +497,7 @@ async function loadFFmpeg() {
 
 
   const baseURL =
-    "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/umd";
-
+  "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/esm";
 
   const coreURL =
     await toBlobURL(
