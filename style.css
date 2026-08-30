@@ -367,3 +367,315 @@ button {
     width: 320px;
   }
 }
+
+
+/* ==============================
+   COMPACT TEMPLATE EDITOR
+================================ */
+
+.compact-editor {
+  min-height: 100dvh;
+  background: #0d0d0d;
+  color: #fff;
+  padding: 14px 16px 18px;
+}
+
+.compact-topbar {
+  width: 100%;
+  max-width: 430px;
+  margin: 0 auto 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.compact-back {
+  width: 44px;
+  height: 44px;
+  border: 1px solid #303030;
+  border-radius: 14px;
+  background: #171717;
+  color: white;
+  font-size: 22px;
+}
+
+.compact-title {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.compact-title strong {
+  font-size: 18px;
+}
+
+.compact-title span {
+  color: #888;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.top-export-btn {
+  border: 0;
+  border-radius: 12px;
+  padding: 11px 17px;
+  background: #fff;
+  color: #000;
+  font-weight: 800;
+  font-size: 14px;
+}
+
+
+/* VIDEO */
+
+.compact-workspace {
+  width: 100%;
+  max-width: 430px;
+  margin: auto;
+}
+
+.video-shell {
+  width: 100%;
+}
+
+.compact-reel {
+  position: relative;
+
+  width: min(48vw, 205px);
+  aspect-ratio: 9 / 16;
+
+  margin: 0 auto;
+
+  overflow: hidden;
+  background: #000;
+
+  border-radius: 13px;
+  box-shadow: 0 10px 35px rgba(0,0,0,.45);
+}
+
+.compact-hook {
+  position: absolute;
+  z-index: 3;
+
+  top: 16%;
+  left: 0;
+
+  width: 100%;
+  min-height: 18%;
+
+  padding: 9px 8px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  background: #fff;
+  color: #000;
+
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.25;
+
+  white-space: pre-wrap;
+}
+
+.compact-image-box {
+  position: absolute;
+
+  top: 34%;
+  left: 0;
+
+  width: 100%;
+  height: 48%;
+
+  background: #101010;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+}
+
+.compact-image-box span {
+  color: #555;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+#previewImage {
+  display: none;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  opacity: 0;
+}
+
+
+/* PLAYER */
+
+.video-player-controls {
+  width: min(70vw, 300px);
+  margin: 9px auto 12px;
+
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.video-play-btn {
+  width: 34px;
+  height: 34px;
+
+  flex: 0 0 34px;
+
+  border: 0;
+  border-radius: 50%;
+
+  background: #fff;
+  color: #000;
+
+  font-size: 13px;
+}
+
+.video-time {
+  color: #aaa;
+  font-size: 11px;
+
+  display: flex;
+  gap: 3px;
+
+  white-space: nowrap;
+}
+
+.mini-progress {
+  height: 4px;
+  flex: 1;
+
+  background: #333;
+  border-radius: 20px;
+
+  overflow: hidden;
+}
+
+.mini-progress-fill {
+  width: 0%;
+  height: 100%;
+
+  background: #fff;
+}
+
+
+/* CONTROLS */
+
+.compact-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+}
+
+.compact-field {
+  background: #171717;
+  border: 1px solid #292929;
+  border-radius: 13px;
+  padding: 10px;
+}
+
+.compact-field label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  color: #aaa;
+}
+
+.compact-field textarea {
+  width: 100%;
+  height: 55px;
+
+  resize: none;
+
+  border: 0;
+  outline: 0;
+
+  border-radius: 8px;
+
+  padding: 8px;
+
+  background: #0d0d0d;
+  color: #fff;
+
+  font-size: 13px;
+}
+
+.image-field input {
+  width: 100%;
+  font-size: 11px;
+  color: #aaa;
+}
+
+
+/* PREVIEW */
+
+.bottom-preview-btn {
+  width: 100%;
+  height: 46px;
+
+  margin-top: 10px;
+
+  border: 0;
+  border-radius: 13px;
+
+  background: #292929;
+  color: #fff;
+
+  font-size: 15px;
+  font-weight: 800;
+}
+
+#editorStatus {
+  text-align: center;
+  color: #777;
+  font-size: 11px;
+  margin-top: 7px;
+}
+
+
+/* SMALL PHONES */
+
+@media (max-height: 700px) {
+
+  .compact-editor {
+    padding-top: 8px;
+  }
+
+  .compact-topbar {
+    margin-bottom: 7px;
+  }
+
+  .compact-reel {
+    width: min(42vw, 175px);
+  }
+
+  .video-player-controls {
+    margin-top: 6px;
+    margin-bottom: 7px;
+  }
+
+  .compact-field textarea {
+    height: 44px;
+  }
+
+  .bottom-preview-btn {
+    height: 42px;
+  }
+}
+
