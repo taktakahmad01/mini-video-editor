@@ -1,5 +1,6 @@
 const express = require("express");
 const multer = require("multer");
+const cors = require("cors");
 const { execFile } = require("child_process");
 const fs = require("fs");
 const path = require("path");
@@ -7,8 +8,16 @@ const ffmpegPath = require("ffmpeg-static");
 
 const app = express();
 
+app.use(cors());
+
+const uploadDir = path.join(__dirname, "uploads");
+
+fs.mkdirSync(uploadDir, {
+  recursive: true
+});
+
 const upload = multer({
-  dest: "uploads/"
+  dest: uploadDir
 });
 
 app.get("/", (req, res) => {
@@ -29,33 +38,22 @@ app.post(
     const input = req.file.path;
 
     const output = path.join(
-      "uploads",
+      uploadDir,
       `${req.file.filename}-export.mp4`
     );
 
     const args = [
       "-y",
+      "-i", input,
 
-      "-i",
-      input,
+      "-c:v", "libx264",
+      "-preset", "ultrafast",
+      "-crf", "26",
 
-      "-c:v",
-      "libx264",
+      "-c:a", "aac",
+      "-b:a", "128k",
 
-      "-preset",
-      "veryfast",
-
-      "-crf",
-      "23",
-
-      "-c:a",
-      "aac",
-
-      "-b:a",
-      "128k",
-
-      "-movflags",
-      "+faststart",
+      "-movflags", "+faststart",
 
       output
     ];
@@ -66,7 +64,6 @@ app.post(
       (error) => {
 
         if (error) {
-
           console.error(error);
 
           fs.rm(
@@ -111,6 +108,7 @@ const PORT =
 
 app.listen(
   PORT,
+  "0.0.0.0",
   () => {
     console.log(
       `Server running on port ${PORT}`
