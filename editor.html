@@ -8,7 +8,7 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title>Template 1</title>
+  <title>ReelFlow Editor</title>
 
   <link
     rel="stylesheet"
@@ -20,10 +20,13 @@
 
   <main class="compact-editor">
 
+    <!-- TOP BAR -->
+
     <header class="compact-topbar">
 
       <button
         class="compact-back"
+        type="button"
         onclick="window.location.href='./index.html'"
         aria-label="Back"
       >
@@ -38,6 +41,7 @@
       <button
         id="exportBtn"
         class="top-export-btn"
+        type="button"
       >
         Export
       </button>
@@ -45,19 +49,28 @@
     </header>
 
 
+    <!-- WORKSPACE -->
+
     <section class="compact-workspace">
 
       <div class="video-shell">
+
+
+        <!-- REAL 9:16 REEL -->
 
         <div
           id="reelPreview"
           class="compact-reel"
         >
 
+          <!-- TOP EMPTY SPACE -->
+
           <div
             class="reel-space reel-space-top"
           ></div>
 
+
+          <!-- HOOK -->
 
           <div
             id="hookOutput"
@@ -67,22 +80,23 @@
           </div>
 
 
+          <!-- EXACT 1:1 IMAGE -->
+
           <div class="compact-image-box">
 
-            <span
-              id="imagePlaceholder"
-              class="image-placeholder"
-            >
+            <span id="imagePlaceholder">
               Your image
             </span>
 
             <img
               id="previewImage"
-              alt="Selected image preview"
+              alt="Selected image"
             >
 
           </div>
 
+
+          <!-- BOTTOM EMPTY SPACE -->
 
           <div
             class="reel-space reel-space-bottom"
@@ -91,12 +105,15 @@
         </div>
 
 
+        <!-- PLAYER -->
+
         <div class="video-player-controls">
 
           <button
             id="videoPlayBtn"
             class="video-play-btn"
-            aria-label="Play preview"
+            type="button"
+            aria-label="Play reel"
           >
             ▶
           </button>
@@ -131,7 +148,12 @@
       </div>
 
 
+      <!-- EDIT FIELDS -->
+
       <div class="compact-fields">
+
+
+        <!-- HOOK INPUT -->
 
         <div class="compact-field hook-field">
 
@@ -141,13 +163,15 @@
 
           <textarea
             id="hookInput"
+            rows="2"
             maxlength="120"
             placeholder="Write your hook..."
-            rows="2"
           ></textarea>
 
         </div>
 
+
+        <!-- IMAGE INPUT -->
 
         <div class="compact-field image-field">
 
@@ -166,29 +190,61 @@
       </div>
 
 
-      <button
-        id="previewBtn"
-        class="bottom-preview-btn"
-      >
-        ▶ Preview
-      </button>
-
-
       <p id="editorStatus"></p>
 
     </section>
 
 
+    <!-- MUSIC -->
+
     <audio
       id="templateAudio"
-      preload="auto"
       src="./template1.mp3"
+      preload="auto"
     ></audio>
+
+
+    <!-- CUSTOM POPUP -->
+
+    <div
+      id="editorPopup"
+      class="editor-popup"
+    >
+
+      <div class="editor-popup-card">
+
+        <div class="editor-popup-icon">
+          🖼️
+        </div>
+
+        <strong>
+          Choose an image first
+        </strong>
+
+        <p>
+          Add your image before playing this reel.
+        </p>
+
+        <button
+          id="popupCloseBtn"
+          class="editor-popup-btn"
+          type="button"
+        >
+          Choose Image
+        </button>
+
+      </div>
+
+    </div>
 
   </main>
 
 
   <script>
+
+    /* ==============================
+       ELEMENTS
+    ============================== */
 
     const hookInput =
       document.getElementById("hookInput");
@@ -204,9 +260,6 @@
 
     const imagePlaceholder =
       document.getElementById("imagePlaceholder");
-
-    const previewBtn =
-      document.getElementById("previewBtn");
 
     const videoPlayBtn =
       document.getElementById("videoPlayBtn");
@@ -229,6 +282,16 @@
     const editorStatus =
       document.getElementById("editorStatus");
 
+    const editorPopup =
+      document.getElementById("editorPopup");
+
+    const popupCloseBtn =
+      document.getElementById("popupCloseBtn");
+
+
+    /* ==============================
+       STATE
+    ============================== */
 
     let selectedImage = null;
 
@@ -239,9 +302,9 @@
     let animationFrame = null;
 
 
-    /*
-      TEMPLATE 1 TIMING
-    */
+    /* ==============================
+       TEMPLATE TIMING
+    ============================== */
 
     const REVEAL_START = 0.95;
 
@@ -255,10 +318,9 @@
       formatTime(REEL_END);
 
 
-    /*
-      Detect Arabic
-      باش نضبط direction والخط
-    */
+    /* ==============================
+       ARABIC DETECTION
+    ============================== */
 
     function containsArabic(text) {
 
@@ -266,6 +328,10 @@
 
     }
 
+
+    /* ==============================
+       HOOK
+    ============================== */
 
     function updateHook() {
 
@@ -278,27 +344,36 @@
         hookOutput.textContent =
           "Your hook goes here";
 
+
         hookOutput.classList.remove(
           "arabic-hook"
         );
 
-        hookOutput.dir = "ltr";
+
+        hookOutput.dir =
+          "ltr";
+
 
         return;
 
       }
 
 
-      hookOutput.textContent = value;
+      hookOutput.textContent =
+        value;
 
 
-      if (containsArabic(value)) {
+      if (
+        containsArabic(value)
+      ) {
 
         hookOutput.classList.add(
           "arabic-hook"
         );
 
-        hookOutput.dir = "rtl";
+
+        hookOutput.dir =
+          "rtl";
 
       } else {
 
@@ -306,7 +381,9 @@
           "arabic-hook"
         );
 
-        hookOutput.dir = "ltr";
+
+        hookOutput.dir =
+          "ltr";
 
       }
 
@@ -318,6 +395,10 @@
       updateHook
     );
 
+
+    /* ==============================
+       IMAGE
+    ============================== */
 
     imageInput.addEventListener(
       "change",
@@ -355,26 +436,28 @@
           "block";
 
 
-        previewImage.style.opacity =
-          "0";
-
-
-        previewImage.style.filter =
-          "brightness(0)";
-
-
         imagePlaceholder.style.display =
           "none";
+
+
+        resetVisuals();
+
+
+        editorPopup.classList.remove(
+          "show"
+        );
+
+
+        editorStatus.textContent =
+          "";
 
       }
     );
 
 
-    previewBtn.addEventListener(
-      "click",
-      togglePreview
-    );
-
+    /* ==============================
+       PLAY BUTTON
+    ============================== */
 
     videoPlayBtn.addEventListener(
       "click",
@@ -386,8 +469,8 @@
 
       if (!selectedImage) {
 
-        alert(
-          "Choose an image first"
+        editorPopup.classList.add(
+          "show"
         );
 
         return;
@@ -408,17 +491,22 @@
     }
 
 
+    /* ==============================
+       START PREVIEW
+    ============================== */
+
     async function startPreview() {
 
       playing = true;
 
 
+      videoPlayBtn.classList.add(
+        "is-playing"
+      );
+
+
       videoPlayBtn.textContent =
         "❚❚";
-
-
-      previewBtn.textContent =
-        "❚❚ Stop";
 
 
       templateAudio.pause();
@@ -443,16 +531,18 @@
         playing = false;
 
 
+        videoPlayBtn.classList.remove(
+          "is-playing"
+        );
+
+
         videoPlayBtn.textContent =
           "▶";
 
 
-        previewBtn.textContent =
-          "▶ Preview";
-
-
         editorStatus.textContent =
-          "Audio could not start.";
+          "Music could not start.";
+
 
         return;
 
@@ -464,12 +554,25 @@
     }
 
 
+    /* ==============================
+       STOP PREVIEW
+    ============================== */
+
     function stopPreview() {
 
       playing = false;
 
 
       templateAudio.pause();
+
+
+      videoPlayBtn.classList.remove(
+        "is-playing"
+      );
+
+
+      videoPlayBtn.textContent =
+        "▶";
 
 
       if (animationFrame) {
@@ -480,16 +583,12 @@
 
       }
 
-
-      videoPlayBtn.textContent =
-        "▶";
-
-
-      previewBtn.textContent =
-        "▶ Preview";
-
     }
 
+
+    /* ==============================
+       LOOP
+    ============================== */
 
     function previewLoop() {
 
@@ -506,9 +605,8 @@
 
 
       /*
-        ملي توصل الصورة 100%
-        = نهاية الـReel
-        ومن بعد loop
+        When image reaches 100%
+        reel starts again.
       */
 
       if (
@@ -538,6 +636,10 @@
     }
 
 
+    /* ==============================
+       IMAGE REVEAL
+    ============================== */
+
     function updatePreview(time) {
 
       currentTime.textContent =
@@ -556,7 +658,7 @@
 
 
       /*
-        قبل reveal
+        Before reveal
       */
 
       if (
@@ -577,7 +679,8 @@
 
 
       /*
-        reveal تدريجي
+        Reveal from dark
+        to 100% visible.
       */
 
       const revealProgress =
@@ -600,6 +703,10 @@
 
     }
 
+
+    /* ==============================
+       RESET
+    ============================== */
 
     function resetVisuals() {
 
@@ -624,6 +731,74 @@
 
     }
 
+
+    /* ==============================
+       POPUP
+    ============================== */
+
+    popupCloseBtn.addEventListener(
+      "click",
+      () => {
+
+        editorPopup.classList.remove(
+          "show"
+        );
+
+
+        imageInput.click();
+
+      }
+    );
+
+
+    editorPopup.addEventListener(
+      "click",
+      (event) => {
+
+        if (
+          event.target ===
+          editorPopup
+        ) {
+
+          editorPopup.classList.remove(
+            "show"
+          );
+
+        }
+
+      }
+    );
+
+
+    /* ==============================
+       EXPORT
+    ============================== */
+
+    exportBtn.addEventListener(
+      "click",
+      () => {
+
+        if (!selectedImage) {
+
+          editorPopup.classList.add(
+            "show"
+          );
+
+          return;
+
+        }
+
+
+        editorStatus.textContent =
+          "Export connection comes next.";
+
+      }
+    );
+
+
+    /* ==============================
+       TIME FORMAT
+    ============================== */
 
     function formatTime(seconds) {
 
@@ -658,17 +833,6 @@
       );
 
     }
-
-
-    exportBtn.addEventListener(
-      "click",
-      () => {
-
-        editorStatus.textContent =
-          "Export connection comes next.";
-
-      }
-    );
 
   </script>
 
