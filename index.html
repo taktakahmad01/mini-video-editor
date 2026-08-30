@@ -6,7 +6,7 @@
 
   <title>Video Cutter</title>
 
-  <link rel="stylesheet" href="style.css?v=2">
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
@@ -17,13 +17,15 @@
 
     <label class="upload-btn">
       Choose Video
+
       <input
-        type="file"
         id="videoInput"
+        type="file"
         accept="video/*"
         hidden
       />
     </label>
+
 
     <section
       id="editor"
@@ -40,7 +42,7 @@
 
         <button
           id="playBtn"
-          class="play-overlay"
+          class="play-btn"
         >
           ▶
         </button>
@@ -48,13 +50,22 @@
       </div>
 
 
-      <div class="time-info">
-        <span id="currentTime">00:00</span>
-        <span id="totalTime">00:00</span>
+      <div class="time-row">
+
+        <span id="currentTime">
+          00:00
+        </span>
+
+        <span>/</span>
+
+        <span id="totalTime">
+          00:00
+        </span>
+
       </div>
 
 
-      <div class="timeline-wrapper">
+      <div class="timeline-area">
 
         <div
           id="timeline"
@@ -66,10 +77,15 @@
             class="segments"
           ></div>
 
+
           <div
             id="playhead"
             class="playhead"
-          ></div>
+          >
+
+            <div class="playhead-handle"></div>
+
+          </div>
 
         </div>
 
@@ -96,15 +112,16 @@
       </div>
 
 
-      <div class="help">
-        Tap timeline → Split → select part → Delete
-      </div>
+      <p class="hint">
+        Drag the white line → Split → select part → Delete
+      </p>
 
     </section>
 
   </main>
 
-  <script src="script.js?v=2"></script>
+
+  <script src="script.js"></script>
 
 </body>
 </html>
