@@ -1,358 +1,155 @@
 * {
   box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-}
-
-html,
-body {
   margin: 0;
-  min-height: 100%;
-  background: #080d16;
-  color: white;
-  font-family: Arial, Helvetica, sans-serif;
+  padding: 0;
 }
 
 body {
-  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  background: #0f0f0f;
+  color: #ffffff;
 }
 
 button {
-  font-family: inherit;
+  font: inherit;
 }
 
-.app {
-  width: 100%;
+.home {
+  min-height: 100vh;
+  padding: 24px 18px 40px;
+}
+
+.home-header {
+  max-width: 700px;
+  margin: 0 auto 28px;
+}
+
+.home-header h1 {
+  font-size: 30px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.home-header p {
+  color: #9d9d9d;
+  font-size: 15px;
+}
+
+.templates {
   max-width: 700px;
   margin: 0 auto;
-  padding: 28px 24px 50px;
 }
 
-h1 {
-  margin: 25px 0 42px;
+.template-card {
+  width: 100%;
+  border: 1px solid #2c2c2c;
+  background: #171717;
+  border-radius: 20px;
+  overflow: hidden;
+  color: #ffffff;
+  cursor: pointer;
+  text-align: left;
+}
+
+.template-preview {
+  position: relative;
+  background: #080808;
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.reel-preview {
+  width: 180px;
+  aspect-ratio: 9 / 16;
+  background: #000000;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+.hook-preview {
+  position: absolute;
+  top: 18%;
+  left: 0;
+  width: 100%;
+  background: #ffffff;
+  color: #000000;
   text-align: center;
-  font-size: 30px;
+  padding: 10px 8px;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.25;
 }
 
-.upload-btn {
-  width: 100%;
-  min-height: 86px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background: white;
-  color: #111;
-
-  border-radius: 20px;
-
-  font-size: 25px;
-  font-weight: 700;
-
-  cursor: pointer;
-}
-
-.hidden {
-  display: none;
-}
-
-
-/* VIDEO */
-
-.video-box {
-  position: relative;
-
-  width: 100%;
-  margin-top: 36px;
-
-  background: black;
-
-  border-radius: 20px;
-  overflow: hidden;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  min-height: 250px;
-}
-
-.video-box video {
-  display: block;
-
-  width: 100%;
-  max-height: 58vh;
-
-  object-fit: contain;
-
-  background: black;
-}
-
-.play-btn {
+.image-preview {
   position: absolute;
-
-  left: 50%;
-  top: 50%;
-
-  transform: translate(-50%, -50%);
-
-  width: 64px;
-  height: 64px;
-
-  border: 0;
-  border-radius: 50%;
-
-  background: rgba(0, 0, 0, .68);
-
-  color: white;
-
-  font-size: 26px;
-
-  cursor: pointer;
-}
-
-.video-box.playing .play-btn {
-  opacity: 0;
-  pointer-events: none;
-}
-
-
-/* TIME */
-
-.time-row {
-  margin-top: 16px;
-
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  left: 0;
+  top: 36%;
   display: flex;
   justify-content: center;
-  gap: 7px;
-
-  font-size: 19px;
-  color: #bec6d2;
-
-  font-variant-numeric: tabular-nums;
-}
-
-
-/* TIMELINE */
-
-.timeline-area {
-  width: 100%;
-
-  margin-top: 30px;
-
-  padding: 15px 3px;
-}
-
-.timeline {
-  position: relative;
-
-  width: 100%;
-  height: 100px;
-
-  border-radius: 12px;
-
-  overflow: visible;
-
-  background: #222a35;
-
-  touch-action: none;
-  user-select: none;
-}
-
-.segments {
-  position: absolute;
-
-  inset: 0;
-
-  display: flex;
-
-  overflow: hidden;
-
-  border-radius: 12px;
-}
-
-.segment {
-  position: relative;
-
-  height: 100%;
-
-  display: flex;
-
-  min-width: 8px;
-
-  overflow: hidden;
-
-  border-right: 3px solid #080d16;
-
-  cursor: pointer;
-}
-
-.segment:last-child {
-  border-right: none;
-}
-
-.segment img {
-  flex: 1;
-
-  min-width: 40px;
-  height: 100%;
-
-  object-fit: cover;
-
-  pointer-events: none;
-  user-select: none;
-}
-
-.segment-placeholder {
-  width: 100%;
-  height: 100%;
-
+  align-items: center;
   background:
     linear-gradient(
       135deg,
-      #353e4b,
-      #1e2530
+      #262626,
+      #111111
     );
-}
-
-.segment.selected::after {
-  content: "";
-
-  position: absolute;
-
-  inset: 0;
-
-  border: 4px solid #fff;
-
-  border-radius: 6px;
-
-  pointer-events: none;
-}
-
-
-/* PLAYHEAD */
-
-.playhead {
-  position: absolute;
-
-  top: -14px;
-  bottom: -14px;
-
-  left: 0;
-
-  width: 4px;
-
-  background: #fff;
-
-  z-index: 20;
-
-  transform: translateX(-2px);
-
-  cursor: grab;
-
-  touch-action: none;
-}
-
-.playhead.dragging {
-  cursor: grabbing;
-}
-
-.playhead-handle {
-  position: absolute;
-
-  top: -2px;
-  left: 50%;
-
-  transform: translateX(-50%);
-
-  width: 22px;
-  height: 22px;
-
-  background: white;
-
-  border-radius: 7px;
-}
-
-
-/* BUTTONS */
-
-.tools {
-  display: grid;
-
-  grid-template-columns: 1fr 1fr;
-
-  gap: 18px;
-
-  margin-top: 25px;
-}
-
-.tool-btn {
-  min-height: 88px;
-
-  border: none;
-  border-radius: 20px;
-
-  color: white;
-
-  font-size: 22px;
+  color: #777777;
+  font-size: 13px;
   font-weight: 700;
-
-  cursor: pointer;
 }
 
-.split {
-  background: #2769e8;
+.play-icon {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  color: #000000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 4px;
+  font-size: 19px;
 }
 
-.delete {
-  background: #e12929;
+.template-info {
+  padding: 18px;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  align-items: center;
 }
 
-.tool-btn:disabled {
-  opacity: .35;
+.template-info h2 {
+  font-size: 18px;
+  margin-bottom: 5px;
 }
 
-.tool-btn:active:not(:disabled) {
-  transform: scale(.97);
+.template-info span {
+  color: #929292;
+  font-size: 13px;
 }
 
-.hint {
-  margin: 28px 0 0;
-
-  text-align: center;
-
-  color: #858f9d;
-
-  font-size: 16px;
+.template-info .use-template {
+  color: #ffffff;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
-
-/* MOBILE */
-
-@media (max-width: 480px) {
-
-  .app {
-    padding:
-      24px 25px
-      45px;
+@media (min-width: 700px) {
+  .home {
+    padding-top: 50px;
   }
 
-  h1 {
-    font-size: 29px;
-    margin-bottom: 42px;
-  }
-
-  .upload-btn {
-    min-height: 86px;
-    font-size: 25px;
-  }
-
-  .timeline {
-    height: 88px;
-  }
-
-  .tool-btn {
-    min-height: 86px;
-    font-size: 20px;
+  .reel-preview {
+    width: 220px;
   }
 }
