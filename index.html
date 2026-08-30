@@ -3,93 +3,63 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Export Test</title>
+
+  <title>Reel Templates</title>
+
+  <link rel="stylesheet" href="./style.css">
 </head>
+
 <body>
 
-  <input id="videoInput" type="file" accept="video/*">
+  <main class="home">
 
-  <video
-    id="video"
-    controls
-    style="width:100%;max-width:400px;margin-top:20px;">
-  </video>
+    <header class="home-header">
+      <h1>Reel Templates</h1>
+      <p>Choose a template and create your reel</p>
+    </header>
 
-  <button
-    id="exportBtn"
-    style="display:block;margin-top:20px;padding:15px;">
-    Export Test
-  </button>
+    <section class="templates">
 
-  <p id="status"></p>
+      <button
+        class="template-card"
+        onclick="window.location.href='./editor.html'"
+      >
 
-  <script>
-    const videoInput = document.getElementById("videoInput");
-    const video = document.getElementById("video");
-    const exportBtn = document.getElementById("exportBtn");
-    const status = document.getElementById("status");
+        <div class="template-preview">
 
-    let file = null;
+          <div class="reel-preview">
 
-    videoInput.addEventListener("change", () => {
-      file = videoInput.files[0];
+            <div class="hook-preview">
+              POV:<br>
+              Your hook goes here
+            </div>
 
-      if (!file) return;
+            <div class="image-preview">
+              IMAGE
+            </div>
 
-      video.src = URL.createObjectURL(file);
-      status.textContent = "Video ready";
-    });
+          </div>
 
-    exportBtn.addEventListener("click", async () => {
+          <div class="play-icon">▶</div>
 
-      if (!file) {
-        alert("Choose a video first");
-        return;
-      }
+        </div>
 
-      status.textContent = "Exporting...";
+        <div class="template-info">
+          <div>
+            <h2>Template 1</h2>
+            <span>Hook Reveal</span>
+          </div>
 
-      const formData = new FormData();
-      formData.append("video", file);
+          <span class="use-template">
+            Use template →
+          </span>
+        </div>
 
-      try {
-        const response = await fetch(
-          "https://mini-video-editor-production.up.railway.app/export",
-          {
-            method: "POST",
-            body: formData
-          }
-        );
+      </button>
 
-        if (!response.ok) {
-          const text = await response.text();
-          throw new Error(text || "Export failed");
-        }
+    </section>
 
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
-
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "export-test.mp4";
-
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-
-        setTimeout(() => {
-          URL.revokeObjectURL(url);
-        }, 1000);
-
-        status.textContent = "Done ✓";
-
-      } catch (error) {
-        console.error(error);
-        status.textContent = "Export failed: " + error.message;
-      }
-
-    });
-  </script>
+  </main>
 
 </body>
 </html>
