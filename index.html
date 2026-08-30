@@ -1,127 +1,312 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
 
-  <title>Video Cutter</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
-  <link rel="stylesheet" href="style.css" />
+  <title>Mini Video Editor</title>
+
+  <link
+    rel="stylesheet"
+    href="/src/style.css?v=4"
+  >
 </head>
 
 <body>
 
-  <main class="app">
+<header class="topbar">
 
-    <h1>Video Cutter</h1>
+  <div class="logo">
+    Video Editor
+  </div>
 
-    <label class="upload-btn">
-      Choose Video
+  <button
+    id="exportBtn"
+    class="export-btn"
+    type="button"
+  >
+    Export
+  </button>
+
+</header>
+
+
+<main class="editor">
+
+  <section class="preview-section">
+
+    <div class="video-wrapper">
+
+      <label
+        id="uploadBtn"
+        class="upload-btn"
+      >
+        + Add Video
+
+        <input
+          id="videoInput"
+          type="file"
+          accept="video/*"
+        >
+
+      </label>
+
+      <video
+        id="video"
+        controls
+        playsinline
+      ></video>
+
+    </div>
+
+  </section>
+
+
+  <section class="trim-panel">
+
+    <div class="trim-header">
+
+      <div>
+        Start
+        <strong id="startText">
+          0:00
+        </strong>
+      </div>
+
+      <div>
+        End
+        <strong id="endText">
+          0:00
+        </strong>
+      </div>
+
+    </div>
+
+
+    <div class="range-row">
+
+      <span>Start</span>
 
       <input
-        id="videoInput"
-        type="file"
-        accept="video/*"
-        hidden
-      />
-    </label>
+        id="startRange"
+        type="range"
+        min="0"
+        max="100"
+        value="0"
+        step="0.1"
+      >
+
+    </div>
 
 
-    <section
-      id="editor"
-      class="editor hidden"
+    <div class="range-row">
+
+      <span>End</span>
+
+      <input
+        id="endRange"
+        type="range"
+        min="0"
+        max="100"
+        value="100"
+        step="0.1"
+      >
+
+    </div>
+
+
+    <button
+      id="previewTrimBtn"
+      class="preview-trim-btn"
+      type="button"
+    >
+      ▶ Preview Trim
+    </button>
+
+  </section>
+
+
+  <section class="tools">
+
+    <button class="tool-btn active">
+      ✂️
+      <span>Trim</span>
+    </button>
+
+    <button class="tool-btn">
+      T
+      <span>Text</span>
+    </button>
+
+    <button class="tool-btn">
+      ♫
+      <span>Audio</span>
+    </button>
+
+    <button class="tool-btn">
+      ⚡
+      <span>Speed</span>
+    </button>
+
+  </section>
+
+</main>
+
+
+<!-- EXPORT MODAL -->
+
+<div
+  id="exportModal"
+  class="modal hidden"
+>
+
+  <div class="modal-card">
+
+    <div class="modal-top">
+
+      <h2>
+        Export Video
+      </h2>
+
+      <button
+        id="closeExport"
+        class="close-btn"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <p class="export-help">
+      Choose video quality
+    </p>
+
+
+    <div
+      id="qualityList"
+      class="quality-list"
     >
 
-      <div class="video-box">
-
-        <video
-          id="video"
-          playsinline
-          preload="metadata"
-        ></video>
-
-        <button
-          id="playBtn"
-          class="play-btn"
-        >
-          ▶
-        </button>
-
-      </div>
-
-
-      <div class="time-row">
-
-        <span id="currentTime">
-          00:00
-        </span>
-
-        <span>/</span>
-
-        <span id="totalTime">
-          00:00
-        </span>
-
-      </div>
-
-
-      <div class="timeline-area">
-
-        <div
-          id="timeline"
-          class="timeline"
-        >
-
-          <div
-            id="segments"
-            class="segments"
-          ></div>
-
-
-          <div
-            id="playhead"
-            class="playhead"
-          >
-
-            <div class="playhead-handle"></div>
-
-          </div>
-
+      <button
+        class="quality-option"
+        data-quality="360"
+      >
+        <div>
+          <strong>360p</strong>
+          <small>Low</small>
         </div>
 
+        <span id="size360">
+          ~0 MB
+        </span>
+      </button>
+
+
+      <button
+        class="quality-option"
+        data-quality="480"
+      >
+        <div>
+          <strong>480p</strong>
+          <small>Medium</small>
+        </div>
+
+        <span id="size480">
+          ~0 MB
+        </span>
+      </button>
+
+
+      <button
+        class="quality-option selected"
+        data-quality="720"
+      >
+        <div>
+          <strong>720p</strong>
+          <small>HD</small>
+        </div>
+
+        <span id="size720">
+          ~0 MB
+        </span>
+      </button>
+
+
+      <button
+        class="quality-option"
+        data-quality="1080"
+      >
+        <div>
+          <strong>1080p</strong>
+          <small>Full HD</small>
+        </div>
+
+        <span id="size1080">
+          ~0 MB
+        </span>
+      </button>
+
+    </div>
+
+
+    <button
+      id="startExportBtn"
+      class="start-export-btn"
+    >
+      Export 720p
+    </button>
+
+
+    <div
+      id="progressSection"
+      class="progress-section hidden"
+    >
+
+      <div class="progress-info">
+
+        <span id="progressLabel">
+          Preparing...
+        </span>
+
+        <strong id="progressPercent">
+          0%
+        </strong>
+
       </div>
 
 
-      <div class="tools">
+      <div class="progress-track">
 
-        <button
-          id="splitBtn"
-          class="tool-btn split"
-        >
-          ✂️ Split
-        </button>
-
-        <button
-          id="deleteBtn"
-          class="tool-btn delete"
-          disabled
-        >
-          🗑 Delete
-        </button>
+        <div
+          id="progressBar"
+          class="progress-bar"
+        ></div>
 
       </div>
 
 
-      <p class="hint">
-        Drag the white line → Split → select part → Delete
+      <p class="keep-open">
+        Keep this page open while exporting.
       </p>
 
-    </section>
+    </div>
 
-  </main>
+  </div>
+
+</div>
 
 
-  <script src="script.js"></script>
+<script
+  type="module"
+  src="/src/main.js?v=4"
+></script>
 
 </body>
+
 </html>
