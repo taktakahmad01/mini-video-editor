@@ -1,193 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+  <title>Video Cutter</title>
 
-  <title>Mini Video Editor</title>
-
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
 
-  <header class="topbar">
+  <main class="app">
 
-    <div class="logo">
-      Video Editor
-    </div>
+    <h1>Video Cutter</h1>
 
-    <button
-      class="export-btn"
-      id="exportBtn"
-      type="button"
+    <label class="upload-btn">
+      Choose Video
+      <input
+        type="file"
+        id="videoInput"
+        accept="video/*"
+        hidden
+      />
+    </label>
+
+    <section
+      id="editor"
+      class="editor hidden"
     >
-      Export
-    </button>
 
-  </header>
-
-
-  <main class="editor">
-
-
-    <!-- VIDEO PREVIEW -->
-
-    <section class="preview-section">
-
-      <div class="video-wrapper">
-
-        <label
-          class="upload-btn"
-          id="uploadBtn"
-        >
-          + Add Video
-
-          <input
-            type="file"
-            id="videoInput"
-            accept="video/*"
-          >
-
-        </label>
-
+      <div class="video-box">
 
         <video
           id="video"
           playsinline
-          controls
+          preload="metadata"
         ></video>
 
-      </div>
-
-    </section>
-
-
-
-    <!-- TRIM -->
-
-    <section
-      class="trim-panel"
-      id="trimPanel"
-    >
-
-      <div class="trim-header">
-
-        <div>
-          Start
-          <strong id="startText">
-            0:00
-          </strong>
-        </div>
-
-        <div>
-          End
-          <strong id="endText">
-            0:00
-          </strong>
-        </div>
+        <button
+          id="playBtn"
+          class="play-overlay"
+        >
+          ▶
+        </button>
 
       </div>
 
 
+      <div class="time-info">
+        <span id="currentTime">00:00</span>
+        <span id="totalTime">00:00</span>
+      </div>
 
-      <div class="range-row">
 
-        <span>
-          Start
-        </span>
+      <div class="timeline-wrapper">
 
-        <input
-          type="range"
-          id="startRange"
-          min="0"
-          max="100"
-          value="0"
-          step="0.1"
+        <div
+          id="timeline"
+          class="timeline"
         >
 
+          <div
+            id="segments"
+            class="segments"
+          ></div>
+
+          <div
+            id="playhead"
+            class="playhead"
+          ></div>
+
+        </div>
+
       </div>
 
 
+      <div class="tools">
 
-      <div class="range-row">
-
-        <span>
-          End
-        </span>
-
-        <input
-          type="range"
-          id="endRange"
-          min="0"
-          max="100"
-          value="100"
-          step="0.1"
+        <button
+          id="splitBtn"
+          class="tool-btn split"
         >
+          ✂️ Split
+        </button>
+
+        <button
+          id="deleteBtn"
+          class="tool-btn delete"
+          disabled
+        >
+          🗑 Delete
+        </button>
 
       </div>
 
 
-      <button
-        class="preview-trim-btn"
-        id="previewTrimBtn"
-        type="button"
-      >
-        ▶ Preview Trim
-      </button>
+      <div class="help">
+        Tap timeline → Split → select part → Delete
+      </div>
 
     </section>
-
-
-
-    <!-- TOOLS -->
-
-    <section class="tools">
-
-      <button
-        class="tool-btn active"
-        type="button"
-      >
-        ✂️
-        <span>Trim</span>
-      </button>
-
-
-      <button
-        class="tool-btn"
-        type="button"
-      >
-        T
-        <span>Text</span>
-      </button>
-
-
-      <button
-        class="tool-btn"
-        type="button"
-      >
-        ♫
-        <span>Audio</span>
-      </button>
-
-
-      <button
-        class="tool-btn"
-        type="button"
-      >
-        ⚡
-        <span>Speed</span>
-      </button>
-
-    </section>
-
 
   </main>
-
 
   <script src="script.js"></script>
 
