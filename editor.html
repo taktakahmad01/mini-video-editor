@@ -4,49 +4,59 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Template 1 Editor</title>
+  <title>Template 1</title>
 
   <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
 
-  <main class="editor-page">
+  <main class="compact-editor">
 
-    <header class="editor-topbar">
+    <header class="compact-topbar">
 
       <button
-        class="back-btn"
+        class="compact-back"
         onclick="window.location.href='./index.html'"
       >
         ←
       </button>
 
-      <div>
-        <h1>Template 1</h1>
-        <p>Hook Reveal</p>
+      <div class="compact-title">
+        <strong>Template 1</strong>
+        <span>Hook Reveal</span>
       </div>
+
+      <button
+        id="exportBtn"
+        class="top-export-btn"
+      >
+        Export
+      </button>
 
     </header>
 
-    <section class="editor-layout">
 
-      <div class="preview-area">
+    <section class="compact-workspace">
 
-        <div class="reel-editor-preview">
+      <div class="video-shell">
+
+        <div
+          id="reelPreview"
+          class="compact-reel"
+        >
 
           <div
             id="hookOutput"
-            class="editor-hook"
+            class="compact-hook"
           >
             POV:<br>
             Your hook goes here
           </div>
 
-          <div
-            id="imageArea"
-            class="editor-image-area"
-          >
+
+          <div class="compact-image-box">
+
             <span id="imagePlaceholder">
               Your image
             </span>
@@ -55,32 +65,62 @@
               id="previewImage"
               alt=""
             >
+
+          </div>
+
+        </div>
+
+
+        <div class="video-player-controls">
+
+          <button
+            id="videoPlayBtn"
+            class="video-play-btn"
+          >
+            ▶
+          </button>
+
+          <div class="video-time">
+            <span id="currentTime">0:00</span>
+            <span>/</span>
+            <span id="totalTime">0:03</span>
+          </div>
+
+          <div class="mini-progress">
+
+            <div
+              id="progressFill"
+              class="mini-progress-fill"
+            ></div>
+
           </div>
 
         </div>
 
       </div>
 
-      <div class="editor-controls">
 
-        <div class="control-card">
+      <div class="compact-fields">
+
+        <div class="compact-field">
 
           <label for="hookInput">
-            Hook text
+            Hook
           </label>
 
           <textarea
             id="hookInput"
             maxlength="120"
-            placeholder="Write your hook here..."
+            placeholder="Write your hook..."
           ></textarea>
 
         </div>
 
-        <div class="control-card">
+
+        <div class="compact-field image-field">
 
           <label>
-            Square image
+            Image
           </label>
 
           <input
@@ -91,29 +131,33 @@
 
         </div>
 
-        <button
-          id="previewBtn"
-          class="main-btn"
-        >
-          ▶ Preview
-        </button>
-
-        <button
-          id="exportBtn"
-          class="export-btn"
-        >
-          Export Reel
-        </button>
-
-        <p id="editorStatus"></p>
-
       </div>
+
+
+      <button
+        id="previewBtn"
+        class="bottom-preview-btn"
+      >
+        ▶ Preview
+      </button>
+
+
+      <p id="editorStatus"></p>
 
     </section>
 
+
+    <audio
+      id="templateAudio"
+      preload="auto"
+      src="./template1.mp3"
+    ></audio>
+
   </main>
 
+
   <script>
+
     const hookInput =
       document.getElementById("hookInput");
 
@@ -132,30 +176,77 @@
     const previewBtn =
       document.getElementById("previewBtn");
 
+    const videoPlayBtn =
+      document.getElementById("videoPlayBtn");
+
     const exportBtn =
       document.getElementById("exportBtn");
+
+    const templateAudio =
+      document.getElementById("templateAudio");
+
+    const currentTime =
+      document.getElementById("currentTime");
+
+    const totalTime =
+      document.getElementById("totalTime");
+
+    const progressFill =
+      document.getElementById("progressFill");
 
     const editorStatus =
       document.getElementById("editorStatus");
 
+
     let selectedImage = null;
+
+    let playing = false;
+
+    let animationFrame = null;
+
+
+    /*
+      TEMP SETTINGS
+
+      ملي ندخلو الموسيقى الحقيقية
+      غادي نضبطو هاد الأرقام
+      على حسب الـbeat بالضبط.
+    */
+
+    const REVEAL_START = 1.20;
+
+    const REVEAL_DURATION = 1.60;
+
+    const REEL_END =
+      REVEAL_START + REVEAL_DURATION;
+
+
+    totalTime.textContent =
+      formatTime(REEL_END);
+
 
     hookInput.addEventListener(
       "input",
       () => {
 
-        const text =
+        const value =
           hookInput.value.trim();
 
-        if (!text) {
+        if (!value) {
+
           hookOutput.innerHTML =
             "POV:<br>Your hook goes here";
+
           return;
+
         }
 
-        hookOutput.textContent = text;
+        hookOutput.textContent =
+          value;
+
       }
     );
+
 
     imageInput.addEventListener(
       "change",
@@ -166,53 +257,275 @@
 
         if (!selectedImage) return;
 
-        const imageUrl =
+
+        previewImage.src =
           URL.createObjectURL(
             selectedImage
           );
 
-        previewImage.src =
-          imageUrl;
 
         previewImage.style.display =
           "block";
 
+
+        previewImage.style.opacity =
+          "0";
+
+
+        previewImage.style.filter =
+          "brightness(0)";
+
+
         imagePlaceholder.style.display =
           "none";
+
       }
     );
+
 
     previewBtn.addEventListener(
       "click",
-      () => {
-
-        if (!selectedImage) {
-          alert(
-            "Choose an image first"
-          );
-          return;
-        }
-
-        previewImage.classList.remove(
-          "reveal-animation"
-        );
-
-        void previewImage.offsetWidth;
-
-        previewImage.classList.add(
-          "reveal-animation"
-        );
-      }
+      togglePreview
     );
+
+
+    videoPlayBtn.addEventListener(
+      "click",
+      togglePreview
+    );
+
+
+    function togglePreview() {
+
+      if (!selectedImage) {
+
+        alert(
+          "Choose an image first"
+        );
+
+        return;
+
+      }
+
+
+      if (playing) {
+
+        stopPreview();
+
+      } else {
+
+        startPreview();
+
+      }
+
+    }
+
+
+    function startPreview() {
+
+      playing = true;
+
+      videoPlayBtn.textContent =
+        "❚❚";
+
+      previewBtn.textContent =
+        "❚❚ Stop";
+
+
+      templateAudio.currentTime = 0;
+
+
+      templateAudio.play().catch(
+        () => {}
+      );
+
+
+      previewLoop();
+
+    }
+
+
+    function stopPreview() {
+
+      playing = false;
+
+      templateAudio.pause();
+
+
+      cancelAnimationFrame(
+        animationFrame
+      );
+
+
+      videoPlayBtn.textContent =
+        "▶";
+
+      previewBtn.textContent =
+        "▶ Preview";
+
+    }
+
+
+    function previewLoop() {
+
+      if (!playing) return;
+
+
+      let time =
+        templateAudio.currentTime;
+
+
+      /*
+        Ila music mazal ma kaynach
+        nستخدمو clock داخلي.
+      */
+
+      if (
+        !templateAudio.duration ||
+        Number.isNaN(
+          templateAudio.duration
+        )
+      ) {
+
+        time =
+          performance.now() / 1000;
+
+      }
+
+
+      const localTime =
+        time % REEL_END;
+
+
+      updatePreview(
+        localTime
+      );
+
+
+      /*
+        REEL END
+        = image وصلت 100%
+
+        ومن بعد نعاودوه.
+      */
+
+      if (
+        templateAudio.currentTime >=
+        REEL_END
+      ) {
+
+        templateAudio.currentTime = 0;
+
+        templateAudio.play().catch(
+          () => {}
+        );
+
+      }
+
+
+      animationFrame =
+        requestAnimationFrame(
+          previewLoop
+        );
+
+    }
+
+
+    function updatePreview(time) {
+
+      currentTime.textContent =
+        formatTime(time);
+
+
+      const progress =
+        Math.min(
+          time / REEL_END,
+          1
+        );
+
+
+      progressFill.style.width =
+        `${progress * 100}%`;
+
+
+      if (
+        time < REVEAL_START
+      ) {
+
+        previewImage.style.opacity =
+          "0";
+
+        previewImage.style.filter =
+          "brightness(0)";
+
+        return;
+
+      }
+
+
+      const revealProgress =
+        Math.min(
+          (
+            time -
+            REVEAL_START
+          ) /
+          REVEAL_DURATION,
+          1
+        );
+
+
+      previewImage.style.opacity =
+        revealProgress;
+
+
+      previewImage.style.filter =
+        `brightness(${revealProgress})`;
+
+    }
+
+
+    function formatTime(seconds) {
+
+      const safeSeconds =
+        Math.max(
+          0,
+          seconds || 0
+        );
+
+
+      const minutes =
+        Math.floor(
+          safeSeconds / 60
+        );
+
+
+      const secs =
+        Math.floor(
+          safeSeconds % 60
+        );
+
+
+      return (
+        minutes +
+        ":" +
+        secs
+          .toString()
+          .padStart(2, "0")
+      );
+
+    }
+
 
     exportBtn.addEventListener(
       "click",
       () => {
 
         editorStatus.textContent =
-          "Export will be connected next.";
+          "Export connection comes next.";
+
       }
     );
+
   </script>
 
 </body>
