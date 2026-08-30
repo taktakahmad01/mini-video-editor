@@ -1,0 +1,328 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: #0d0e12;
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.topbar {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  background: #121318;
+  border-bottom: 1px solid #282a31;
+}
+
+.logo {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.export-btn {
+  border: 0;
+  padding: 10px 19px;
+  border-radius: 9px;
+  background: white;
+  color: #111;
+  font-weight: 700;
+}
+
+.editor {
+  max-width: 1100px;
+  margin: auto;
+  padding: 18px 14px 35px;
+}
+
+.preview-section {
+  display: flex;
+  justify-content: center;
+}
+
+.video-wrapper {
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 9 / 16;
+  max-height: 58vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: black;
+  border: 1px solid #292c33;
+  border-radius: 12px;
+}
+
+#video {
+  width: 100%;
+  height: 100%;
+  display: none;
+  object-fit: contain;
+  background: black;
+}
+
+.upload-btn {
+  padding: 14px 20px;
+  border-radius: 9px;
+  background: white;
+  color: #111;
+  font-weight: bold;
+}
+
+#videoInput {
+  display: none;
+}
+
+.trim-panel {
+  max-width: 760px;
+  margin: 20px auto 0;
+  padding: 16px;
+  background: #191b21;
+  border: 1px solid #292c34;
+  border-radius: 12px;
+}
+
+.trim-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  font-size: 13px;
+  color: #999ca4;
+}
+
+.trim-header strong {
+  display: block;
+  margin-top: 4px;
+  color: white;
+  font-size: 15px;
+}
+
+.range-row {
+  display: grid;
+  grid-template-columns: 45px 1fr;
+  gap: 10px;
+  align-items: center;
+  margin: 14px 0;
+}
+
+.range-row span {
+  color: #aaa;
+  font-size: 13px;
+}
+
+.range-row input {
+  width: 100%;
+}
+
+.preview-trim-btn {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  border: 0;
+  border-radius: 8px;
+  background: white;
+  color: #111;
+  font-weight: 700;
+}
+
+.tools {
+  max-width: 600px;
+  margin: 14px auto 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.tool-btn {
+  min-height: 60px;
+  border: 0;
+  border-radius: 9px;
+  background: #1b1d23;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+}
+
+.tool-btn span {
+  font-size: 12px;
+  color: #b2b4bb;
+}
+
+.tool-btn.active {
+  outline: 1px solid #666a74;
+}
+
+
+/* MODAL */
+
+.modal {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  padding: 18px;
+  background: rgba(0, 0, 0, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 440px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 20px;
+  border: 1px solid #30333c;
+  border-radius: 16px;
+  background: #17191f;
+}
+
+.modal-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-top h2 {
+  font-size: 21px;
+}
+
+.close-btn {
+  border: 0;
+  background: transparent;
+  color: white;
+  font-size: 29px;
+}
+
+.export-help {
+  margin-top: 7px;
+  margin-bottom: 18px;
+  color: #9699a1;
+  font-size: 14px;
+}
+
+.quality-list {
+  display: grid;
+  gap: 9px;
+}
+
+.quality-option {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid #30333c;
+  border-radius: 11px;
+  background: #202229;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+}
+
+.quality-option.selected {
+  border: 2px solid white;
+}
+
+.quality-option strong {
+  display: block;
+  font-size: 16px;
+}
+
+.quality-option small {
+  display: block;
+  margin-top: 3px;
+  color: #9699a1;
+}
+
+.quality-option > span {
+  font-weight: bold;
+}
+
+.start-export-btn {
+  width: 100%;
+  margin-top: 17px;
+  padding: 14px;
+  border: 0;
+  border-radius: 10px;
+  background: white;
+  color: #111;
+  font-weight: 700;
+}
+
+.start-export-btn:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.progress-section {
+  margin-top: 20px;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  font-size: 14px;
+}
+
+.progress-track {
+  height: 9px;
+  margin-top: 10px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: #30333c;
+}
+
+.progress-bar {
+  width: 0%;
+  height: 100%;
+  background: white;
+  transition: width 0.15s linear;
+}
+
+.keep-open {
+  margin-top: 10px;
+  color: #9699a1;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+@media (min-width: 800px) {
+
+  .topbar {
+    padding: 0 30px;
+  }
+
+  .editor {
+    padding: 28px;
+  }
+
+  .video-wrapper {
+    max-height: 62vh;
+  }
+
+}
