@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Template 1 Editor</title>
+
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+  <main class="editor-page">
+
+    <header class="editor-topbar">
+
+      <button
+        class="back-btn"
+        onclick="window.location.href='./index.html'"
+      >
+        ←
+      </button>
+
+      <div>
+        <h1>Template 1</h1>
+        <p>Hook Reveal</p>
+      </div>
+
+    </header>
+
+    <section class="editor-layout">
+
+      <div class="preview-area">
+
+        <div class="reel-editor-preview">
+
+          <div
+            id="hookOutput"
+            class="editor-hook"
+          >
+            POV:<br>
+            Your hook goes here
+          </div>
+
+          <div
+            id="imageArea"
+            class="editor-image-area"
+          >
+            <span id="imagePlaceholder">
+              Your image
+            </span>
+
+            <img
+              id="previewImage"
+              alt=""
+            >
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="editor-controls">
+
+        <div class="control-card">
+
+          <label for="hookInput">
+            Hook text
+          </label>
+
+          <textarea
+            id="hookInput"
+            maxlength="120"
+            placeholder="Write your hook here..."
+          ></textarea>
+
+        </div>
+
+        <div class="control-card">
+
+          <label>
+            Square image
+          </label>
+
+          <input
+            id="imageInput"
+            type="file"
+            accept="image/*"
+          >
+
+        </div>
+
+        <button
+          id="previewBtn"
+          class="main-btn"
+        >
+          ▶ Preview
+        </button>
+
+        <button
+          id="exportBtn"
+          class="export-btn"
+        >
+          Export Reel
+        </button>
+
+        <p id="editorStatus"></p>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <script>
+    const hookInput =
+      document.getElementById("hookInput");
+
+    const hookOutput =
+      document.getElementById("hookOutput");
+
+    const imageInput =
+      document.getElementById("imageInput");
+
+    const previewImage =
+      document.getElementById("previewImage");
+
+    const imagePlaceholder =
+      document.getElementById("imagePlaceholder");
+
+    const previewBtn =
+      document.getElementById("previewBtn");
+
+    const exportBtn =
+      document.getElementById("exportBtn");
+
+    const editorStatus =
+      document.getElementById("editorStatus");
+
+    let selectedImage = null;
+
+    hookInput.addEventListener(
+      "input",
+      () => {
+
+        const text =
+          hookInput.value.trim();
+
+        if (!text) {
+          hookOutput.innerHTML =
+            "POV:<br>Your hook goes here";
+          return;
+        }
+
+        hookOutput.textContent = text;
+      }
+    );
+
+    imageInput.addEventListener(
+      "change",
+      () => {
+
+        selectedImage =
+          imageInput.files[0];
+
+        if (!selectedImage) return;
+
+        const imageUrl =
+          URL.createObjectURL(
+            selectedImage
+          );
+
+        previewImage.src =
+          imageUrl;
+
+        previewImage.style.display =
+          "block";
+
+        imagePlaceholder.style.display =
+          "none";
+      }
+    );
+
+    previewBtn.addEventListener(
+      "click",
+      () => {
+
+        if (!selectedImage) {
+          alert(
+            "Choose an image first"
+          );
+          return;
+        }
+
+        previewImage.classList.remove(
+          "reveal-animation"
+        );
+
+        void previewImage.offsetWidth;
+
+        previewImage.classList.add(
+          "reveal-animation"
+        );
+      }
+    );
+
+    exportBtn.addEventListener(
+      "click",
+      () => {
+
+        editorStatus.textContent =
+          "Export will be connected next.";
+      }
+    );
+  </script>
+
+</body>
+</html>
