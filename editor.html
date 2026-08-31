@@ -1036,146 +1036,25 @@ async function exportReel() {
    CREATE HOOK IMAGE
 ============================== */
 
-async function createHookImage() {
+
+        async function createHookImage() {
+
+  const hookRect =
+    hookOutput.getBoundingClientRect();
+
+  const exportScale =
+    720 / hookRect.width;
 
   const canvas =
-    document.createElement(
-      "canvas"
+    await html2canvas(
+      hookOutput,
+      {
+        backgroundColor: "#ffffff",
+        scale: exportScale,
+        useCORS: true,
+        logging: false
+      }
     );
-
-
-  const width =
-    720;
-
-
-  /*
-    Calculate the same Hook height
-    used in the Editor.
-  */
-
-  const previewWidth =
-    reelPreview.getBoundingClientRect().width;
-
-
-  const previewHookHeight =
-    hookOutput.getBoundingClientRect().height;
-
-
-  let height =
-    Math.round(
-      previewHookHeight *
-      (
-        width /
-        previewWidth
-      )
-    );
-
-
-  height =
-    Math.max(
-      80,
-      Math.min(
-        height,
-        280
-      )
-    );
-
-
-  canvas.width =
-    width;
-
-
-  canvas.height =
-    height;
-
-
-  const ctx =
-    canvas.getContext(
-      "2d"
-    );
-
-
-  /* WHITE HOOK BACKGROUND */
-
-  ctx.fillStyle =
-    "#ffffff";
-
-
-  ctx.fillRect(
-    0,
-    0,
-    width,
-    height
-  );
-
-
-  /* TEXT */
-
-  let text =
-    hookInput.value.trim();
-
-
-  if (!text) {
-
-    text =
-      "Your hook goes here";
-
-  }
-
-
-  const isArabic =
-    containsArabic(text);
-
-
-  ctx.fillStyle =
-    "#080808";
-
-
-  ctx.textAlign =
-    "center";
-
-
-  ctx.textBaseline =
-    "middle";
-
-
-  ctx.direction =
-    isArabic
-      ? "rtl"
-      : "ltr";
-
-
-  /*
-    Browser/system font.
-    Arabic and English supported.
-  */
-
-  const sizePercent =
-  Number(hookSize.value) / 100;
-
-const arabicFontSize =
-  Math.round(46 * sizePercent);
-
-const englishFontSize =
-  Math.round(44 * sizePercent);
-
-ctx.font =
-  isArabic
-    ? `700 ${arabicFontSize}px "SF Arabic", "Geeza Pro", Tahoma, Arial, sans-serif`
-    : `700 ${englishFontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif`;
-
-
-  drawWrappedText(
-    ctx,
-    text,
-    width / 2,
-    height / 2,
-    width - 80,
-    isArabic
-  ? Math.round(60 * sizePercent)
-  : Math.round(56 * sizePercent)
-  );
-
 
   return new Promise(
     (resolve, reject) => {
@@ -1184,17 +1063,13 @@ ctx.font =
         (blob) => {
 
           if (blob) {
-
             resolve(blob);
-
           } else {
-
             reject(
               new Error(
                 "Could not create hook"
               )
             );
-
           }
 
         },
@@ -1205,7 +1080,6 @@ ctx.font =
   );
 
 }
-
 
 /* ==============================
    WRAP HOOK TEXT
