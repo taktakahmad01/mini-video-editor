@@ -467,6 +467,43 @@ hookSize.addEventListener(
 );
 
 applyHookSize();
+
+const savedHookWidth =
+  localStorage.getItem("reelflow_hook_width");
+
+if (savedHookWidth) {
+  hookWidth.value = savedHookWidth;
+}
+
+function applyHookWidth() {
+  const width = Number(hookWidth.value);
+
+  hookOutput.style.width =
+    `${width}%`;
+
+  hookOutput.style.marginLeft =
+    "auto";
+
+  hookOutput.style.marginRight =
+    "auto";
+
+  hookWidthValue.textContent =
+    `${width}%`;
+
+  localStorage.setItem(
+    "reelflow_hook_width",
+    String(width)
+  );
+}
+
+hookWidth.addEventListener(
+  "input",
+  applyHookWidth
+);
+
+applyHookWidth();
+
+    
     /* ==============================
        IMAGE
     ============================== */
