@@ -1348,3 +1348,32 @@ button {
     height: 42px;
   }
 }
+
+
+/* ==============================
+   HOOK TEXT SIZE CONTROL
+============================== */
+
+.hook-size-control {
+  margin-top: 14px;
+}
+
+.hook-size-control label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #c9c9d2;
+}
+
+#hookSizeValue {
+  font-size: 11px;
+  opacity: 0.75;
+}
+
+#hookSize {
+  width: 100%;
+  cursor: pointer;
+}
