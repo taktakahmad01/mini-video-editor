@@ -1377,3 +1377,22 @@ button {
   width: 100%;
   cursor: pointer;
 }
+
+
+.hook-width-control {
+  margin-top: 18px;
+}
+
+.hook-width-control label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.hook-width-control input {
+  width: 100%;
+}
+
+
