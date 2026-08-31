@@ -468,34 +468,76 @@ hookSize.addEventListener(
 
 applyHookSize();
 
-const savedHookHeight =
-  localStorage.getItem("reelflow_hook_height");
+const savedHookPosition =
+  localStorage.getItem("reelflow_hook_position");
 
-if (savedHookHeight) {
-  hookHeight.value = savedHookHeight;
+if (savedHookPosition) {
+  hookPosition.value = savedHookPosition;
 }
 
-function applyHookHeight() {
-  const height = Number(hookHeight.value);
+function applyHookPosition() {
+  const position = Number(hookPosition.value);
 
-  hookOutput.style.minHeight =
-    `${height}%`;
+  const reel =
+    document.getElementById("reelPreview");
 
-  hookHeightValue.textContent =
-    `${height}%`;
+  const imageBox =
+    reel.querySelector(".compact-image-box");
+
+  const reelHeight =
+    reel.getBoundingClientRect().height;
+
+  const hookHeight =
+    hookOutput.getBoundingClientRect().height;
+
+  const imageHeight =
+    imageBox.getBoundingClientRect().height;
+
+  const freeSpace =
+    Math.max(
+      0,
+      reelHeight - hookHeight - imageHeight
+    );
+
+  const topSpace =
+    freeSpace * (position / 100);
+
+  const bottomSpace =
+    freeSpace - topSpace;
+
+  document.querySelector(
+    ".reel-space-top"
+  ).style.flex = "none";
+
+  document.querySelector(
+    ".reel-space-top"
+  ).style.height =
+    `${topSpace}px`;
+
+  document.querySelector(
+    ".reel-space-bottom"
+  ).style.flex = "none";
+
+  document.querySelector(
+    ".reel-space-bottom"
+  ).style.height =
+    `${bottomSpace}px`;
+
+  hookPositionValue.textContent =
+    `${position}%`;
 
   localStorage.setItem(
-    "reelflow_hook_height",
-    String(height)
+    "reelflow_hook_position",
+    String(position)
   );
 }
 
-hookHeight.addEventListener(
+hookPosition.addEventListener(
   "input",
-  applyHookHeight
+  applyHookPosition
 );
 
-applyHookHeight();
+applyHookPosition();
 
     
     /* ==============================
