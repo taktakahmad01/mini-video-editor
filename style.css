@@ -1439,3 +1439,37 @@ button {
   width: 100%;
   box-sizing: border-box;
 }
+
+
+.image-field {
+  min-height: 170px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 14px;
+}
+
+.image-field > label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #c9c9d2;
+}
+
+.image-field input[type="file"] {
+  width: 100%;
+  padding: 18px 14px;
+  border: 1px dashed rgba(130, 130, 150, 0.45);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.025);
+  color: #8d8d98;
+  box-sizing: border-box;
+}
+
+.image-field input[type="file"]::file-selector-button {
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-right: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
