@@ -482,10 +482,13 @@ if (savedHookHeight) {
 function applyHookHeight() {
   const height = Number(hookHeight.value);
 
-  const basePadding = 10;
+  const safePadding = 4;
 
-  const padding =
-    basePadding * (height / 40);
+const adjustablePadding =
+  6 * (height / 40);
+
+const padding =
+  safePadding + adjustablePadding;
 
   hookOutput.style.minHeight = "";
 
