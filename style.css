@@ -1422,3 +1422,20 @@ button {
   margin: 0;
   cursor: pointer;
 }
+
+
+#hookSize,
+#hookHeight {
+  display: block;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 100% !important;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.hook-size-control,
+.hook-height-control {
+  width: 100%;
+  box-sizing: border-box;
+}
