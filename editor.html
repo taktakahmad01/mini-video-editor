@@ -205,16 +205,27 @@
 
         <div class="compact-field image-field">
 
-          <label for="imageInput">
-            Image
-          </label>
+          <label>Image</label>
 
-          <input
-            id="imageInput"
-            type="file"
-            accept="image/*"
-          >
+<label class="image-upload-box" id="imageUploadBox" for="imageInput">
 
+  <div class="image-upload-icon" id="imageUploadIcon">
+    +
+  </div>
+
+  <div class="image-upload-title" id="imageUploadTitle">
+    Add Image
+  </div>
+
+  <div class="image-upload-name" id="imageUploadName"></div>
+
+</label>
+
+<input
+  id="imageInput"
+  type="file"
+  accept="image/*"
+>
         </div>
 
       </div>
