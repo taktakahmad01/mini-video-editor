@@ -468,40 +468,34 @@ hookSize.addEventListener(
 
 applyHookSize();
 
-const savedHookWidth =
-  localStorage.getItem("reelflow_hook_width");
+const savedHookHeight =
+  localStorage.getItem("reelflow_hook_height");
 
-if (savedHookWidth) {
-  hookWidth.value = savedHookWidth;
+if (savedHookHeight) {
+  hookHeight.value = savedHookHeight;
 }
 
-function applyHookWidth() {
-  const width = Number(hookWidth.value);
+function applyHookHeight() {
+  const height = Number(hookHeight.value);
 
-  hookOutput.style.width =
-    `${width}%`;
+  hookOutput.style.minHeight =
+    `${height}%`;
 
-  hookOutput.style.marginLeft =
-    "auto";
-
-  hookOutput.style.marginRight =
-    "auto";
-
-  hookWidthValue.textContent =
-    `${width}%`;
+  hookHeightValue.textContent =
+    `${height}%`;
 
   localStorage.setItem(
-    "reelflow_hook_width",
-    String(width)
+    "reelflow_hook_height",
+    String(height)
   );
 }
 
-hookWidth.addEventListener(
+hookHeight.addEventListener(
   "input",
-  applyHookWidth
+  applyHookHeight
 );
 
-applyHookWidth();
+applyHookHeight();
 
     
     /* ==============================
