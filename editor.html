@@ -531,6 +531,20 @@ applyHookHeight();
        IMAGE
     ============================== */
 
+
+const imageUploadBox =
+  document.getElementById("imageUploadBox");
+
+const imageUploadIcon =
+  document.getElementById("imageUploadIcon");
+
+const imageUploadTitle =
+  document.getElementById("imageUploadTitle");
+
+const imageUploadName =
+  document.getElementById("imageUploadName");
+
+    
     imageInput.addEventListener(
       "change",
       () => {
@@ -542,7 +556,15 @@ applyHookHeight();
         if (!selectedImage) {
           return;
         }
+imageUploadBox.classList.add("has-image");
 
+imageUploadIcon.textContent = "✓";
+
+imageUploadTitle.textContent =
+  "Change Image";
+
+imageUploadName.textContent =
+  selectedImage.name;
 
         if (selectedImageUrl) {
 
