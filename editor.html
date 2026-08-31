@@ -418,7 +418,34 @@ const hookSizeValue =
     );
     updateHook();
 
+const savedHookSize =
+  localStorage.getItem("reelflow_hook_size");
 
+if (savedHookSize) {
+  hookSize.value = savedHookSize;
+}
+
+function applyHookSize() {
+  const size = Number(hookSize.value);
+
+  hookOutput.style.fontSize =
+    `${size}%`;
+
+  hookSizeValue.textContent =
+    `${size}%`;
+
+  localStorage.setItem(
+    "reelflow_hook_size",
+    String(size)
+  );
+}
+
+hookSize.addEventListener(
+  "input",
+  applyHookSize
+);
+
+applyHookSize();
     /* ==============================
        IMAGE
     ============================== */
