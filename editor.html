@@ -1147,10 +1147,19 @@ async function createHookImage() {
     Arabic and English supported.
   */
 
-  ctx.font =
-    isArabic
-      ? '700 46px "SF Arabic", "Geeza Pro", Tahoma, Arial, sans-serif'
-      : '700 44px -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif';
+  const sizePercent =
+  Number(hookSize.value) / 100;
+
+const arabicFontSize =
+  Math.round(46 * sizePercent);
+
+const englishFontSize =
+  Math.round(44 * sizePercent);
+
+ctx.font =
+  isArabic
+    ? `700 ${arabicFontSize}px "SF Arabic", "Geeza Pro", Tahoma, Arial, sans-serif`
+    : `700 ${englishFontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif`;
 
 
   drawWrappedText(
@@ -1159,7 +1168,9 @@ async function createHookImage() {
     width / 2,
     height / 2,
     width - 80,
-    isArabic ? 60 : 56
+    isArabic
+  ? Math.round(60 * sizePercent)
+  : Math.round(56 * sizePercent)
   );
 
 
