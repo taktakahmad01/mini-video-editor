@@ -482,11 +482,21 @@ if (savedHookHeight) {
 function applyHookHeight() {
   const height = Number(hookHeight.value);
 
-  hookOutput.style.minHeight =
-    `${height}px`;
+  const basePadding = 10;
+
+  const padding =
+    basePadding * (height / 40);
+
+  hookOutput.style.minHeight = "";
+
+  hookOutput.style.paddingTop =
+    `${padding}px`;
+
+  hookOutput.style.paddingBottom =
+    `${padding}px`;
 
   hookHeightValue.textContent =
-    `${height}px`;
+    `${height}`;
 
   localStorage.setItem(
     "reelflow_hook_height",
@@ -494,6 +504,7 @@ function applyHookHeight() {
   );
 }
 
+    
 hookHeight.addEventListener(
   "input",
   applyHookHeight
