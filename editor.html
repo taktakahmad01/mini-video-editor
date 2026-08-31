@@ -472,7 +472,34 @@ hookSize.addEventListener(
 
 applyHookSize();
 
+const savedHookHeight =
+  localStorage.getItem("reelflow_hook_height");
 
+if (savedHookHeight) {
+  hookHeight.value = savedHookHeight;
+}
+
+function applyHookHeight() {
+  const height = Number(hookHeight.value);
+
+  hookOutput.style.minHeight =
+    `${height}px`;
+
+  hookHeightValue.textContent =
+    `${height}px`;
+
+  localStorage.setItem(
+    "reelflow_hook_height",
+    String(height)
+  );
+}
+
+hookHeight.addEventListener(
+  "input",
+  applyHookHeight
+);
+
+applyHookHeight();
 
     
     /* ==============================
